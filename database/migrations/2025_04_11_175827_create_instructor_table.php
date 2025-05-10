@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up()
 {
-    Schema::create('staff', function (Blueprint $table) {
-        $table->bigIncrements('staff_id'); // Staff ID number
+    Schema::create('instructors', function (Blueprint $table) {
+        $table->id(); // Staff ID number
         $table->string('first_name', 100);
         $table->string('last_name', 100);
         $table->string('email', 100)->unique();
@@ -24,7 +24,8 @@ return new class extends Migration
         $table->text('city')->nullable();
         $table->text('street')->nullable();
         $table->text('zipcode')->nullable();
-        $table->timestamps();
+        $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+        $table->timestamps('');
     });
 }
 
@@ -33,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('staff');
+        Schema::dropIfExists('instructors');
     }
 };

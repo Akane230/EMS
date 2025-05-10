@@ -4,25 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Program;
 use App\Models\Enrollment;
-use App\Models\Schedule;
 
-class Section extends Model
+
+class Term extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'section_name',
-        'program_id',
+        'schoolyear_semester',
+        'start_date',
+        'end_date',
     ];
 
-    public function programs(){
-        return $this->belongsTo(Program::class);
-    }
     public function enrollments(){
         return $this->hasMany(Enrollment::class);
-    }
-    public function schedules(){
-        return $this->hasMany(Schedule::class);
     }
 }

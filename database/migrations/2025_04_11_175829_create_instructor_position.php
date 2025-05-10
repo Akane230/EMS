@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('academic_years', function (Blueprint $table) {
-            $table->bigIncrements('academic_year_id');
-            $table->string('academic_year', 50);
+        Schema::create('instructorPosition', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('instructor_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('position_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('academic_years');
+        Schema::dropIfExists('instructorPosition');
     }
 };

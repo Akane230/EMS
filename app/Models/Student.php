@@ -4,13 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\StudentDetails;
+use App\Models\Enrollment;
 
 class Student extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'student_id';
-    public $incrementing = true;
     protected $fillable = [
         'student_id', 
         'first_name', 
@@ -27,6 +25,6 @@ class Student extends Model
     ];
 
     public function studentDetails(){
-        return $this->hasMany(StudentDetails::class);
+        return $this->hasMany(Enrollment::class);
     }
 }

@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -12,7 +13,7 @@ return new class extends Migration
     public function up()
 {
     Schema::create('students', function (Blueprint $table) {
-        $table->bigIncrements('student_id'); // Student ID number
+        $table->id(); // Student ID number
         $table->string('first_name', 100);
         $table->string('last_name', 100);
         $table->string('email', 100)->unique();
@@ -24,8 +25,13 @@ return new class extends Migration
         $table->text('city')->nullable();
         $table->text('street')->nullable();
         $table->text('zipcode')->nullable();
+        $table->string('status', 50);
+        $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
         $table->timestamps();
     });
+
+    DB::statement('ALTER TABLE students AUTO_INCREMENT = 2025;');
+
 }
 
     /**

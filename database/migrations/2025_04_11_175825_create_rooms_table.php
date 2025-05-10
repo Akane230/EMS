@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('departments', function (Blueprint $table) {
-            $table->bigIncrements("department_id");
-            $table->string("deparment_name", 100);
-            $table->text("description");
+        Schema::create('rooms', function (Blueprint $table) {
+            $table->id();
+            $table->string('roomname');
+            $table->foreignId('department_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departments');
+        Schema::dropIfExists('rooms');
     }
 };

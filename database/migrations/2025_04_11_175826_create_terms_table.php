@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('positions', function (Blueprint $table) {
-            $table->bigIncrements('position_id');
-            $table->string('position_name', 100);
+        Schema::create('terms', function (Blueprint $table) {
+            $table->id();
+            $table->string('schoolyear_semester', 50);
+            $table->date('start_date');
+            $table->date('end_date');
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('positions');
+        Schema::dropIfExists('terms');
     }
 };

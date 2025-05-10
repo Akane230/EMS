@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('year_levels', function (Blueprint $table) {
-            $table->bigIncrements('year_level_id');
-            $table->integer('year_level');
+        Schema::create('positions', function (Blueprint $table) {
+            $table->id();
+            $table->string('position_name', 100);
             $table->timestamps();
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('year_levels');
+        Schema::dropIfExists('positions');
     }
 };
