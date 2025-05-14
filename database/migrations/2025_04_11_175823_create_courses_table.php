@@ -16,7 +16,7 @@ return new class extends Migration
         $table->string('course_name', 100);
         $table->integer('credits');
         $table->text('description')->nullable();
-        $table->foreignId('program_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+        $table->foreignId('program_id')->nullable()->constrained()->onUpdate('cascade')->onDelete('cascade');
         $table->timestamps();
     });
 }

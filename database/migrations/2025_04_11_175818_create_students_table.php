@@ -26,7 +26,7 @@ return new class extends Migration
         $table->text('street')->nullable();
         $table->text('zipcode')->nullable();
         $table->string('status', 50);
-        $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+        $table->foreignId('user_id')->nullable()->constrained()->onUpdate('cascade')->onDelete('cascade');
         $table->timestamps();
     });
 

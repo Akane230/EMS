@@ -3,45 +3,76 @@
 <head>
     <title>{{ $title }}</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .date {
+            font-size: 14px;
+            color: #666;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .status-active {
+            color: green;
+            font-weight: bold;
+        }
+        .status-inactive {
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <h1>{{ $title }}</h1>
-    <p>Generated on: {{ now()->format('F j, Y g:i A') }}</p>
-    
+    <div class="header">
+        <div class="title">{{ $title }}</div>
+        <div class="date">Generated on: {{ now()->format('F j, Y') }}</div>
+    </div>
+
     <table>
         <thead>
             <tr>
-                <th>Student ID</th>
+                <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Gender</th>
                 <th>Date of Birth</th>
-                <th>Contact</th>
-                <th>Address</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
             @foreach($students as $student)
-                <tr>
-                    <td>{{ $student->student_id }}</td>
-                    <td>{{ $student->first_name }} {{ $student->last_name }}</td>
-                    <td>{{ $student->email }}</td>
-                    <td>{{ $student->gender }}</td>
-                    <td>{{ \Carbon\Carbon::parse($student->date_of_birth)->format('m/d/Y') }}</td>
-                    <td>{{ $student->contact_number }}</td>
-                    <td>
-                        @if($student->street){{ $student->street }}, @endif
-                        @if($student->city){{ $student->city }}, @endif
-                        @if($student->province){{ $student->province }}, @endif
-                        @if($student->country){{ $student->country }} @endif
-                        @if($student->zipcode)({{ $student->zipcode }})@endif
-                    </td>
-                </tr>
+            <tr>
+                <td>{{ $student->id }}</td>
+                <td>{{ $student->first_name }} {{ $student->last_name }}</td>
+                <td>{{ $student->email }}</td>
+                <td>{{ $student->gender }}</td>
+                <td>{{ \Carbon\Carbon::parse($student->date_of_birth)->format('m/d/Y') }}</td>
+                <td class="status-{{ strtolower($student->status) }}">{{ $student->status }}</td>
+            </tr>
             @endforeach
         </tbody>
     </table>

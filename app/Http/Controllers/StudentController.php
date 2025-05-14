@@ -16,7 +16,7 @@ class StudentController extends Controller
         $search = $request->input('search');
 
         $students = Student::when($search, function ($query, $search) {
-            return $query->where('student_id', 'like', "%{$search}%")
+            return $query->where('id', 'like', "%{$search}%")
                 ->orWhere('first_name', 'like', "%{$search}%")
                 ->orWhere('last_name', 'like', "%{$search}%")
                 ->orWhere('email', 'like', "%{$search}%");
@@ -39,11 +39,10 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'student_id' => 'required|unique:students',
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required|email|unique:students',
-            'gender' => 'required',
+            'gender' => 'required|in:Male,Female,Other',
             'date_of_birth' => 'required|date',
             'country' => 'nullable',
             'province' => 'nullable',
@@ -51,7 +50,8 @@ class StudentController extends Controller
             'street' => 'nullable',
             'zipcode' => 'nullable',
             'contact_number' => 'nullable',
-            'contact_number' => 'nullable',
+            'status' => 'required|string|max:50',
+            'user_id' => 'nullable|exists:users,id',
         ]);
 
         Student::create($request->all());
@@ -63,10 +63,10 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      */
-    // public function show(Student $student)
-    // {
-    //     return view('students.show', compact('student'));
-    // }
+    public function show(Student $student)
+    {
+        return view('students.show', compact('student'));
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -82,11 +82,10 @@ class StudentController extends Controller
     public function update(Request $request, Student $student)
     {
         $request->validate([
-            'student_id' => 'required|unique:students,student_id,' . $student->student_id . ',student_id',
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required|email|unique:students,email,' . $student->student_id . ',student_id',
-            'gender' => 'required',
+            'email' => 'required|email|unique:students,email,' . $student->id,
+            'gender' => 'required|in:Male,Female,Other',
             'date_of_birth' => 'required|date',
             'country' => 'nullable',
             'province' => 'nullable',
@@ -94,6 +93,8 @@ class StudentController extends Controller
             'street' => 'nullable',
             'zipcode' => 'nullable',
             'contact_number' => 'nullable',
+            'status' => 'required|string|max:50',
+            'user_id' => 'nullable|exists:users,id',
         ]);
 
         $student->update($request->all());

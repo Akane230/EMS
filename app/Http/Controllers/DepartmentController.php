@@ -4,15 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Department;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class DepartmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $search = $request->input('search');
+
+        $departments = Department::when($search, function ($query, $search) {
+            return $query->where('id', 'like', "%{$search}%")
+                ->orWhere('department_name', 'like', "%{$search}%");
+        })->paginate(10);
+
+        return view('departments.index', compact('departments'));
     }
 
     /**
@@ -20,7 +30,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
+        return view('departments.create');
     }
 
     /**
@@ -28,7 +38,21 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'deparment_name' => 'required|string|max:100|unique:departments',
+            'description' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('departments.create')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
+        Department::create($request->all());
+
+        return redirect()->route('departments.index')
+                        ->with('success', 'Department created successfully.');
     }
 
     /**
@@ -36,7 +60,7 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        //
+        return view('departments.show', compact('department'));
     }
 
     /**
@@ -44,7 +68,7 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        //
+        return view('departments.edit', compact('department'));
     }
 
     /**
@@ -52,7 +76,21 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, Department $department)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'deparment_name' => 'required|string|max:100|unique:departments,deparment_name,' . $department->id,
+            'description' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('departments.edit', $department)
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
+        $department->update($request->all());
+
+        return redirect()->route('departments.index')
+                        ->with('success', 'Department updated successfully.');
     }
 
     /**
@@ -60,6 +98,21 @@ class DepartmentController extends Controller
      */
     public function destroy(Department $department)
     {
-        //
+        $department->delete();
+
+        return redirect()->route('departments.index')
+                        ->with('success', 'Department deleted successfully.');
+    }
+
+    public function exportPdf()
+    {
+        $department = Department::all();
+
+        $pdf = PDF::loadView('departments.pdf', [
+            'departments' => $department,
+            'title' => 'Department Records'
+        ]);
+
+        return $pdf->download('department_records_' . now()->format('Y-m-d') . '.pdf');
     }
 }

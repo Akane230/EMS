@@ -12,20 +12,26 @@ class Course extends Model
 {
     use HasFactory;
     protected $primaryKey = 'course_code';
+    protected $keyType = 'string';
+    public $incrementing = false;
     protected $fillable = [
         'course_code',
         'course_name',
         'credits',
-        'description'
+        'description',
+        'program',
     ];
 
-    public function programs(){
+    public function programs()
+    {
         return $this->belongsTo(Program::class);
     }
-    public function schedules(){
+    public function schedules()
+    {
         return $this->hasMany(Schedule::class);
     }
-    public function enrollments(){
+    public function enrollments()
+    {
         return $this->hasMany(Enrollment::class);
     }
 }

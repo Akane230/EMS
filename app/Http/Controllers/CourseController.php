@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class CourseController extends Controller
 {
@@ -41,6 +43,7 @@ class CourseController extends Controller
             'course_code' => 'required',
             'course_name' => 'required',
             'description' => 'required',
+            'program' => 'required',
             'credits' => 'required',
         ]); 
 
@@ -75,6 +78,7 @@ class CourseController extends Controller
             'course_code' => 'required|unique:courses,course_id',
             'course_name' => 'required',
             'description' => 'required',
+            'program' => 'required',
             'credits' => 'required',
         ]);
 
@@ -93,5 +97,17 @@ class CourseController extends Controller
         
         return redirect()->route('courses.index')
             ->with('success', 'Course deleted successfully');
+    }
+
+    public function exportPdf()
+    {
+        $course = Course::all();
+
+        $pdf = PDF::loadView('courses.pdf', [
+            'courses' => $course,
+            'title' => 'Course Records'
+        ]);
+
+        return $pdf->download('course_records_' . now()->format('Y-m-d') . '.pdf');
     }
 }

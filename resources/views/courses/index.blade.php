@@ -1,82 +1,88 @@
-<x-app-layout>
+<x-app-layout title="Courses">
     <x-slot name="header">
-        <div class="mb-4">
-            <form action="{{ route('courses.index') }}" method="GET">
-                <div class="flex">
-                    <x-text-input 
-                        type="text" 
-                        name="search" 
-                        class="block w-full"
-                        placeholder="Search..." 
-                        value="{{ request('search') }}"
-                    />
-                    <x-primary-button class="ml-2">
-                        Search
-                    </x-primary-button>
-                    @if(request('search'))
-                        <a href="{{ route('courses.index') }}" class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                            Clear
-                        </a>
-                    @endif
-                </div>
-            </form>
-        </div>
-
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Courses') }}
-            </h2>
-            <a href="{{ route('courses.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
-                Add New Course
-            </a>
-        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    @if ($message = Session::get('success'))
-                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
-                            <p>{{ $message }}</p>
-                        </div>
-                    @endif
+    <div class="flex justify-between items-center mb-4 add-export-container">
+        <a href="{{ route('courses.create') }}" class="module-action">
+            Add Course <i class="fas fa-plus ml-2"></i>
+        </a>
+        <a href="{{ route('courses.export.pdf') }}" class="px-4 py-2 bg-green-600 text-black rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition">
+            <i class="fas fa-file-pdf mr-2"></i> Export PDF
+        </a>
+    </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
-                            <thead class="bg-gray-50 dark:bg-gray-700">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Course Code</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Course Name</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Credits</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
-                                @foreach ($courses as $course)
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ $course->course_code }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ $course->course_name }}</td>
-                                        <td class="px-6 py-4">{{ $course->description ?? 'N/A' }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">{{ $course->credits }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <form action="{{ route('courses.destroy', $course->course_id) }}" method="POST">
-                                                <a href="{{ route('courses.edit', $course->course_id) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-900 dark:hover:text-yellow-200 mr-3">Edit</a>
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-200" onclick="return confirm('Are you sure you want to delete this course?')">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        <div class="mt-4">
-                            {{ $courses->links() }} <!-- Change variable name for courses/staff -->
+    <div class="max-w-7xl mx-auto">
+        <div class="module-card">
+            <div class="mb-6">
+                <form action="{{ route('courses.index') }}" method="GET">
+                    <div class="flex">
+                        <div class="relative flex-grow">
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                                placeholder="Search by code, name or description">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                         </div>
+                        <button type="submit" class="ml-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition">
+                            Search
+                        </button>
+                        @if(request('search'))
+                        <a href="{{ route('courses.index') }}" class="ml-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                            Clear
+                        </a>
+                        @endif
                     </div>
-                </div>
+                </form>
+            </div>
+
+            @if ($message = Session::get('success'))
+            <div class="mb-6 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg" role="alert">
+                <p>{{ $message }}</p>
+            </div>
+            @endif
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+                    <thead class="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Code</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Credits</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Program</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+                        @foreach ($courses as $course)
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $course->course_code }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $course->course_name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $course->credits }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $course->program->name ?? 'N/A' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex space-x-2">
+                                    <a href="{{ route('courses.show', $course->course_code) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('courses.edit', $course->course_code) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-200">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('courses.destroy', $course->course_code) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200" onclick="return confirm('Are you sure you want to delete this course?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-6">
+                {{ $courses->links() }}
             </div>
         </div>
     </div>

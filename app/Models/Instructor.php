@@ -12,7 +12,7 @@ class Instructor extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'staff_id',
+        'id',
         'first_name',
         'last_name',
         'email',

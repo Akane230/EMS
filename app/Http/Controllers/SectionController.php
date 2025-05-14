@@ -3,16 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\Section;
+use App\Models\Program;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SectionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = Section::with('program');
+        
+        // Handle search
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where('section_name', 'like', "%{$search}%")
+                  ->orWhereHas('program', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  });
+        }
+        
+        $sections = $query->latest()->paginate(10);
+        
+        return view('sections.index', compact('sections'));
     }
 
     /**
@@ -20,7 +36,8 @@ class SectionController extends Controller
      */
     public function create()
     {
-        //
+        $programs = Program::all();
+        return view('sections.create', compact('programs'));
     }
 
     /**
@@ -28,7 +45,24 @@ class SectionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'section_name' => 'required|string|max:20|unique:sections',
+            'program_id' => 'required|exists:programs,id',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        Section::create([
+            'section_name' => $request->section_name,
+            'program_id' => $request->program_id,
+        ]);
+
+        return redirect()->route('sections.index')
+            ->with('success', 'Section created successfully.');
     }
 
     /**
@@ -36,7 +70,8 @@ class SectionController extends Controller
      */
     public function show(Section $section)
     {
-        //
+        $section->load('program');
+        return view('sections.show', compact('section'));
     }
 
     /**
@@ -44,7 +79,8 @@ class SectionController extends Controller
      */
     public function edit(Section $section)
     {
-        //
+        $programs = Program::all();
+        return view('sections.edit', compact('section', 'programs'));
     }
 
     /**
@@ -52,7 +88,24 @@ class SectionController extends Controller
      */
     public function update(Request $request, Section $section)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'section_name' => 'required|string|max:20|unique:sections,section_name,' . $section->id,
+            'program_id' => 'required|exists:programs,id',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $section->update([
+            'section_name' => $request->section_name,
+            'program_id' => $request->program_id,
+        ]);
+
+        return redirect()->route('sections.index')
+            ->with('success', 'Section updated successfully.');
     }
 
     /**
@@ -60,6 +113,24 @@ class SectionController extends Controller
      */
     public function destroy(Section $section)
     {
-        //
+        $section->delete();
+        
+        return redirect()->route('sections.index')
+            ->with('success', 'Section deleted successfully.');
+    }
+    
+    /**
+     * Export sections to PDF.
+     */
+    public function exportPdf()
+    {
+        $section = Section::all();
+
+        $pdf = PDF::loadView('sections.pdf', [
+            'sections' => $section,
+            'title' => 'Section Records'
+        ]);
+
+        return $pdf->download('section_records_' . now()->format('Y-m-d') . '.pdf');
     }
 }

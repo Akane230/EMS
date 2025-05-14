@@ -1,115 +1,133 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Add New Student') }}
-            </h2>
-            <a href="{{ route('students.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
-                Back
-            </a>
-        </div>
+    <x-slot name="title">
+        Add Student
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    @if ($errors->any())
-                        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
-                            <p><strong>Error!</strong> Please check the form for errors.</p>
-                            <ul class="list-disc pl-5 mt-2">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+    <div class="dashboard-header">
+        <div class="dashboard-title">Add Student</div>
+    </div>
 
-                    <form action="{{ route('students.store') }}" method="POST">
-                        @csrf
+    <div class="max-w-4xl mx-auto">
+        @if ($errors->any())
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg" role="alert">
+            <p class="font-bold">Error!</p>
+            <ul class="list-disc pl-5 mt-2">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
 
-                        <div class="mb-4">
-                            <x-input-label for="student_id" :value="__('Student ID')" />
-                            <x-text-input id="student_id" class="block mt-1 w-full" type="text" name="student_id" :value="old('student_id')" required />
-                        </div>
+        <div class="module-card">
+            <form action="{{ route('students.store') }}" method="POST">
+                @csrf
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <x-input-label for="first_name" :value="__('First Name')" />
-                                <x-text-input id="first_name" class="block mt-1 w-full" type="text" name="first_name" :value="old('first_name')" required />
-                            </div>
-                            <div>
-                                <x-input-label for="last_name" :value="__('Last Name')" />
-                                <x-text-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')" required />
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <x-input-label for="email" :value="__('Email')" />
-                            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <x-input-label for="gender" :value="__('Gender')" />
-                                <select id="gender" name="gender" class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm block mt-1 w-full" required>
-                                    <option value="">Select Gender</option>
-                                    <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
-                                    <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
-                                    <option value="Other" {{ old('gender') == 'Other' ? 'selected' : '' }}>Other</option>
-                                </select>
-                            </div>
-                            <div>
-                                <x-input-label for="date_of_birth" :value="__('Date of Birth')" />
-                                <x-text-input id="date_of_birth" class="block mt-1 w-full" type="date" name="date_of_birth" :value="old('date_of_birth')" required />
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <h3 class="font-semibold mb-2">Address Information</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <x-input-label for="country" :value="__('Country')" />
-                                    <x-text-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country')" />
-                                </div>
-                                <div>
-                                    <x-input-label for="province" :value="__('Province/State')" />
-                                    <x-text-input id="province" class="block mt-1 w-full" type="text" name="province" :value="old('province')" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <x-input-label for="city" :value="__('City')" />
-                                    <x-text-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city')" />
-                                </div>
-                                <div class="md:col-span-2">
-                                    <x-input-label for="street" :value="__('Street Address')" />
-                                    <x-text-input id="street" class="block mt-1 w-full" type="text" name="street" :value="old('street')" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <x-input-label for="zipcode" :value="__('Zipcode/Postal Code')" />
-                            <x-text-input id="zipcode" class="block mt-1 w-full" type="text" name="zipcode" :value="old('zipcode')" />
-                        </div>
-
-                        <div class="mb-4">
-                            <x-input-label for="contact_number" :value="__('Contact Number')" />
-                            <x-text-input id="contact_number" class="block mt-1 w-full" type="text" name="contact_number" :value="old('contact_number')" />
-                        </div>
-
-                        <div class="flex items-center justify-end mt-4">
-                            <x-primary-button class="ml-4">
-                                {{ __('Submit') }}
-                            </x-primary-button>
-                        </div>
-                    </form>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">First Name</label>
+                        <input type="text" name="first_name" value="{{ old('first_name') }}"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Last Name</label>
+                        <input type="text" name="last_name" value="{{ old('last_name') }}"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                    </div>
                 </div>
-            </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-1">Email</label>
+                    <input type="email" name="email" value="{{ old('email') }}"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Gender</label>
+                        <select name="gender" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                            <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+                            <option value="Other" {{ old('gender') == 'Other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Date of Birth</label>
+                        <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                    </div>
+                </div>
+
+                <!-- Address Section -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-medium mb-4 border-b pb-2">Address Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Country</label>
+                            <input type="text" name="country" value="{{ old('country') }}"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Province/State</label>
+                            <input type="text" name="province" value="{{ old('province') }}"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">City</label>
+                            <input type="text" name="city" value="{{ old('city') }}"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium mb-1">Street Address</label>
+                            <input type="text" name="street" value="{{ old('street') }}"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium mb-1">Zipcode/Postal Code</label>
+                        <input type="text" name="zipcode" value="{{ old('zipcode') }}"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-1">Contact Number</label>
+                    <input type="text" name="contact_number" value="{{ old('contact_number') }}"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Status</label>
+                        <select name="status" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                            <option value="">Select Status</option>
+                            <option value="Active" {{ old('status') == 'Active' ? 'selected' : '' }}>Active</option>
+                            <option value="Inactive" {{ old('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                            <option value="Regular" {{ old('status') == 'Regular' ? 'selected' : '' }}>Regular</option>
+                            <option value="Irregular" {{ old('status') == 'Irregular' ? 'selected' : '' }}>Irregular</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">User ID (Optional)</label>
+                        <input type="number" name="user_id" value="{{ old('user_id') }}"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-4 mt-8">
+                    <a href="{{ route('students.index') }}" class="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                        Cancel
+                    </a>
+                    <button type="submit" class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition">
+                        Create Student
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </x-app-layout>

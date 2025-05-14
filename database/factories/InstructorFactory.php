@@ -4,12 +4,11 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class StaffFactory extends Factory
+class InstructorFactory extends Factory
 {
     public function definition()
     {
         return [
-            'staff_id' => $this->faker->unique()->numberBetween(100, 999),
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
             'email' => $this->faker->unique()->safeEmail,

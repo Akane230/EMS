@@ -10,7 +10,6 @@ class StudentFactory extends Factory
     public function definition()
     {
         return [
-            'student_id' => $this->faker->unique()->numberBetween(1000, 9999),
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
             'email' => $this->faker->unique()->safeEmail,
@@ -21,6 +20,7 @@ class StudentFactory extends Factory
             'city' => $this->faker->city,
             'street' => $this->faker->streetAddress,
             'zipcode' => $this->faker->postcode,
+            'status' => fake()->randomElement(['Regular', 'Irregular', 'Active', 'Inactive',]),
             'contact_number' => $this->faker->phoneNumber,
         ];
     }

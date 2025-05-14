@@ -1,37 +1,36 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
 
-        <title>{{ config('app.name', 'Enrollment Management System') }}</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $title ?? 'EMS Dashboard' }}</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.2/cdn.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js"></script>
+    <script src="{{ asset('js/layout.js') }}" defer></script>
+    <link rel="stylesheet" href="{{ asset('css/index.css') }}">
+    {{ $styles ?? '' }}
+</head>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        <link rel="icon" type="image" href="{{ asset('images/logo.svg') }}"/>
+<body x-data 
+      :class="{ 'dark': $store.layout.darkMode }">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+    <div class="layout">
+        <!-- Sidebar Component -->
+        <x-sidebar :user-name="Auth::user()->name ?? 'Admin User'" :user-role="Auth::user()->role ?? 'Administrator'" />
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+        <!-- Main Content -->
+        <div class="main-content" :class="{ 'main-content-expanded': !$store.layout.sidebarOpen }">
+            <x-header />
 
-            <!-- Page Content -->
-            <main>
+            <main class="dashboard fade-in">
                 {{ $slot }}
             </main>
         </div>
-    </body>
+    </div>
+
+    {{ $scripts ?? '' }}
+</body>
+
 </html>
