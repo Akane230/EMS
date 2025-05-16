@@ -60,7 +60,7 @@
                         @forelse($departments as $department)
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $department->id }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">{{ $department->deparment_name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">{{ $department->department_name }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ Str::limit($department->description, 50) }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $department->created_at->format('M d, Y') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">

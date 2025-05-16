@@ -445,6 +445,7 @@ body {
     text-decoration: none;
     display: inline-flex;
     align-items: center;
+    gap: 2px;
 }
 
 .module-action:hover {
@@ -1008,6 +1009,17 @@ body {
     padding-bottom: 25px;
     padding-right: 25px;
 }
+
+button{
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.input-padding{
+    padding: 10px;
+}
+
 
 /* Animation for page transitions */
 @keyframes fadeIn {

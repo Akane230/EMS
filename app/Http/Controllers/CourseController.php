@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Program;
 
 
 class CourseController extends Controller
@@ -13,17 +14,17 @@ class CourseController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    $search = $request->input('search');
-    
-    $courses = Course::when($search, function ($query, $search) {
-        return $query->where('course_code', 'like', "%{$search}%")
-            ->orWhere('title', 'like', "%{$search}%")
-            ->orWhere('description', 'like', "%{$search}%");
-    })->paginate(10);
+    {
+        $search = $request->input('search');
 
-    return view('courses.index', compact('courses'));
-}
+        $courses = Course::when($search, function ($query, $search) {
+            return $query->where('course_code', 'like', "%{$search}%")
+                ->orWhere('title', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+        })->paginate(10);
+
+        return view('courses.index', compact('courses'));
+    }
 
 
     /**
@@ -31,9 +32,9 @@ class CourseController extends Controller
      */
     public function create()
     {
-        return view('courses.create');
+        $programs = Program::all(); // Retrieve all programs from the database
+        return view('courses.create', compact('programs')); // Pass programs to the view
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -45,10 +46,10 @@ class CourseController extends Controller
             'description' => 'required',
             'program' => 'required',
             'credits' => 'required',
-        ]); 
+        ]);
 
-        Course::create($request->all()); 
-        
+        Course::create($request->all());
+
         return redirect()->route('courses.index')
             ->with('success', 'Course created successfully.');
     }
@@ -83,7 +84,7 @@ class CourseController extends Controller
         ]);
 
         $course->update($request->all());
-        
+
         return redirect()->route('courses.index')
             ->with('success', 'Course updated successfully');
     }
@@ -94,7 +95,7 @@ class CourseController extends Controller
     public function destroy(Course $course)
     {
         $course->delete();
-        
+
         return redirect()->route('courses.index')
             ->with('success', 'Course deleted successfully');
     }

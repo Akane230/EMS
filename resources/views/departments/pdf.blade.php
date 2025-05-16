@@ -62,7 +62,7 @@
             @foreach($departments as $department)
             <tr>
                 <td>{{ $department->id }}</td>
-                <td>{{ $department->deparment_name }}</td>
+                <td>{{ $department->department_name }}</td>
                 <td class="description">{{ $department->description }}</td>
                 <td>{{ \Carbon\Carbon::parse($department->created_at)->format('m/d/Y') }}</td>
                 <td>{{ \Carbon\Carbon::parse($department->updated_at)->format('m/d/Y') }}</td>

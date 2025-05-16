@@ -39,7 +39,7 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'deparment_name' => 'required|string|max:100|unique:departments',
+            'department_name' => 'required|string|max:100|unique:departments',
             'description' => 'required|string',
         ]);
 
@@ -77,7 +77,7 @@ class DepartmentController extends Controller
     public function update(Request $request, Department $department)
     {
         $validator = Validator::make($request->all(), [
-            'deparment_name' => 'required|string|max:100|unique:departments,deparment_name,' . $department->id,
+            'department_name' => 'required|string|max:100|unique:departments,department_name,' . $department->id,
             'description' => 'required|string',
         ]);
 

@@ -55,7 +55,7 @@
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
                         <option value="">Select Program</option>
                         @foreach($programs as $program)
-                        <option value="{{ $program->id }}" {{ old('program_id', $course->program_id) == $program->id ? 'selected' : '' }}>{{ $program->name }}</option>
+                        <option value="{{ $program->id }}" {{ old('program_id', $course->program_id) == $program->id ? 'selected' : '' }}>{{ $program->program_name }}</option>
                         @endforeach
                     </select>
                 </div>

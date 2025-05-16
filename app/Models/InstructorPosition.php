@@ -10,6 +10,9 @@ use App\Models\Position;
 class InstructorPosition extends Model
 {
     use HasFactory;
+
+    protected $table = 'instructorPosition';
+    
     protected $fillable = [
         'instructor_id',
         'position_id',

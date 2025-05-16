@@ -1,6 +1,12 @@
-<x-app-layout title="Courses">
-    <x-slot name="header">
+<x-app-layout>
+    <x-slot name="title">
+        Courses Management
     </x-slot>
+
+    <div class="dashboard-header">
+        <div class="dashboard-title">Courses Management</div>
+        <div class="dashboard-subtitle">Manage all courses in the system</div>
+    </div>
 
     <div class="flex justify-between items-center mb-4 add-export-container">
         <a href="{{ route('courses.create') }}" class="module-action">

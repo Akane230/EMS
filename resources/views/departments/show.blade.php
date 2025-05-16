@@ -5,7 +5,7 @@
 
     <div class="dashboard-header">
         <div class="dashboard-title">Department Details</div>
-        <div class="dashboard-subtitle">Viewing details of {{ $department->deparment_name }}</div>
+        <div class="dashboard-subtitle">Viewing details of {{ $department->department_name }}</div>
     </div>
 
     <div class="module-card">
@@ -15,7 +15,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Department Name</p>
-                    <p class="font-medium">{{ $department->deparment_name }}</p>
+                    <p class="font-medium">{{ $department->department_name }}</p>
                 </div>
                 
                 <div>

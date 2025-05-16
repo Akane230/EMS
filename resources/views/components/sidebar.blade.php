@@ -44,7 +44,7 @@
                 <span class="nav-icon"><i class="fas fa-chalkboard-teacher"></i></span>
                 Instructors
             </a>
-            <a href="#" class="nav-link @active(request()->is('enrollment'))">
+            <a href="{{ route('enrollments.index') }}" class="nav-link @active(request()->is('enrollments'))">
                 <span class="nav-icon"><i class="fas fa-clipboard-list"></i></span>
                 Enrollment
             </a>
@@ -60,6 +60,22 @@
                 <span class="nav-icon"><i class="fa-solid fa-section"></i></span>
                 Sections
             </a>
+            <a href="{{ route('rooms.index') }}" class="nav-link @active(request()->routeIs('rooms.*'))">
+                <span class="nav-icon"><i class="fa-solid fa-building-user"></i></span>
+                Rooms
+            </a>
+            <a href="{{ route('terms.index') }}" class="nav-link @active(request()->routeIs('terms.*'))">
+                <span class="nav-icon"><i class="fa-solid fa-calendar"></i></span>
+                Terms
+            </a>
+            <a href="{{ route('positions.index') }}" class="nav-link @active(request()->routeIs('positions.*'))">
+                <span class="nav-icon"> <img class="nav-img" src="{{ asset('images/position.png') }}" alt=""></span>
+                Positions
+            </a>
+            <a href="{{ route('schedules.index') }}" class="nav-link @active(request()->routeIs('schedules.*'))">
+                <span class="nav-icon"><i class="fa-solid fa-clock"></i></span>
+                Schedules
+            </a>
         </div>
 
         <div class="nav-section">
@@ -68,7 +84,7 @@
                 <span class="nav-icon"><i class="fas fa-cog"></i></span>
                 System Settings
             </a>
-            <a href="#" class="nav-link @active(request()->is('settings/users'))">
+            <a href="{{ route('users.index') }}" class="nav-link @active(request()->is('users.*'))">
                 <span class="nav-icon"><i class="fas fa-users-cog"></i></span>
                 User Management
             </a>

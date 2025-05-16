@@ -86,7 +86,7 @@
                                     <form action="{{ route('students.destroy', $student->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200" onclick="return confirm('Are you sure you want to delete this student?')">
+                                        <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200 delete-button" onclick="return confirm('Are you sure you want to delete this student?')">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>

@@ -17,7 +17,7 @@
                         <p><span class="font-semibold">Code:</span> {{ $course->course_code }}</p>
                         <p><span class="font-semibold">Name:</span> {{ $course->course_name }}</p>
                         <p><span class="font-semibold">Credits:</span> {{ $course->credits }}</p>
-                        <p><span class="font-semibold">Program:</span> {{ $course->program->name ?? 'N/A' }}</p>
+                        <p><span class="font-semibold">Program:</span> {{ $course->program->program_name ?? 'N/A' }}</p>
                     </div>
                 </div>
                 <div>
