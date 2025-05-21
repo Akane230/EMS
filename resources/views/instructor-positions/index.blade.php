@@ -8,6 +8,12 @@
         <div class="dashboard-subtitle">Manage all instructor positions in the system</div>
     </div>
 
+    @if(session('success'))
+    <div class="px-4 py-3 mb-6 border-l-4 border-green-500 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+        {{ session('success') }}
+    </div>
+    @endif
+
     <div class="flex items-center space-x-4 add-export-container">
         <a href="{{ route('instructor-positions.create') }}" class="module-action">
             Assign Position <i class="fas fa-plus ml-2"></i>
@@ -53,12 +59,12 @@
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                             <td class="px-6 py-4 whitespace-nowrap">{{ $instructorPosition->id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="font-medium">{{ $instructorPosition->instructor->name ?? 'N/A' }}</div>
+                                <div class="font-medium">{{ $instructorPosition->instructor->first_name ?? 'N/A' }} {{ $instructorPosition->instructor->last_name ?? 'N/A' }}</div>
                                 <div class="text-sm text-gray-500 dark:text-gray-400">{{ $instructorPosition->instructor->email ?? 'N/A' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="font-medium">{{ $instructorPosition->position->title ?? 'N/A' }}</div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ $instructorPosition->position->department ?? 'N/A' }}</div>
+                                <div class="font-medium">{{ $instructorPosition->position->position_name ?? 'N/A' }}</div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ $instructorPosition->position->department->department_name ?? 'N/A' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $instructorPosition->created_at->format('M d, Y') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -91,96 +97,7 @@
             </div>
 
             <div class="mt-6">
-                @if($instructorPositions->hasPages())
-                <div class="pagination-wrapper">
-                    <div class="flex items-center justify-between">
-                        <div class="flex-1 flex justify-between flex-wrap sm:hidden">
-                            {{-- Mobile pagination controls --}}
-                            @if($instructorPositions->onFirstPage())
-                            <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default rounded-md">
-                                Previous
-                            </span>
-                            @else
-                            <a href="{{ $instructorPositions->appends(request()->except('page'))->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                                Previous
-                            </a>
-                            @endif
-
-                            @if($instructorPositions->hasMorePages())
-                            <a href="{{ $instructorPositions->appends(request()->except('page'))->nextPageUrl() }}" class="ml-3 relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                                Next
-                            </a>
-                            @else
-                            <span class="ml-3 relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default rounded-md">
-                                Next
-                            </span>
-                            @endif
-                        </div>
-
-                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                            {{-- Results info --}}
-                            <div>
-                                <p class="text-sm text-gray-700 dark:text-gray-300">
-                                    Showing
-                                    <span class="font-medium">{{ $instructorPositions->firstItem() ?? 0 }}</span>
-                                    to
-                                    <span class="font-medium">{{ $instructorPositions->lastItem() ?? 0 }}</span>
-                                    of
-                                    <span class="font-medium">{{ $instructorPositions->total() }}</span>
-                                    results
-                                    @if(request('search'))
-                                    for "<span class="font-medium">{{ request('search') }}</span>"
-                                    @endif
-                                </p>
-                            </div>
-
-                            {{-- Desktop pagination links --}}
-                            <div>
-                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                    {{-- Previous Page Link --}}
-                                    @if($instructorPositions->onFirstPage())
-                                    <span class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400">
-                                        <span class="sr-only">Previous</span>
-                                        <i class="fas fa-chevron-left w-5 h-5"></i>
-                                    </span>
-                                    @else
-                                    <a href="{{ $instructorPositions->appends(request()->except('page'))->previousPageUrl() }}" rel="prev" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
-                                        <span class="sr-only">Previous</span>
-                                        <i class="fas fa-chevron-left w-5 h-5"></i>
-                                    </a>
-                                    @endif
-
-                                    {{-- Pagination Elements --}}
-                                    @foreach($instructorPositions->appends(request()->except('page'))->getUrlRange(1, $instructorPositions->lastPage()) as $page => $url)
-                                    @if($page == $instructorPositions->currentPage())
-                                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-primary-50 dark:bg-primary-900 text-sm font-medium text-primary-600 dark:text-primary-300">
-                                        {{ $page }}
-                                    </span>
-                                    @else
-                                    <a href="{{ $url }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-                                        {{ $page }}
-                                    </a>
-                                    @endif
-                                    @endforeach
-
-                                    {{-- Next Page Link --}}
-                                    @if($instructorPositions->hasMorePages())
-                                    <a href="{{ $instructorPositions->appends(request()->except('page'))->nextPageUrl() }}" rel="next" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
-                                        <span class="sr-only">Next</span>
-                                        <i class="fas fa-chevron-right w-5 h-5"></i>
-                                    </a>
-                                    @else
-                                    <span class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400">
-                                        <span class="sr-only">Next</span>
-                                        <i class="fas fa-chevron-right w-5 h-5"></i>
-                                    </span>
-                                    @endif
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endif
+                {{ $instructorPositions->links() }}
             </div>
         </div>
     </div>

@@ -44,10 +44,6 @@
                 <span class="nav-icon"><i class="fas fa-chalkboard-teacher"></i></span>
                 Instructors
             </a>
-            <a href="{{ route('enrollments.index') }}" class="nav-link @active(request()->is('enrollments'))">
-                <span class="nav-icon"><i class="fas fa-clipboard-list"></i></span>
-                Enrollment
-            </a>
             <a href="{{ route('departments.index') }}" class="nav-link @active(request()->routeIs('departments.*'))">
                 <span class="nav-icon"><i class="fas fa-building"></i></span>
                 Departments
@@ -72,9 +68,22 @@
                 <span class="nav-icon"> <img class="nav-img" src="{{ asset('images/position.png') }}" alt=""></span>
                 Positions
             </a>
+            
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Transactions</div>
+            <a href="{{ route('enrollments.index') }}" class="nav-link @active(request()->is('enrollments'))">
+                <span class="nav-icon"><i class="fas fa-clipboard-list"></i></span>
+                Enrollment
+            </a>
             <a href="{{ route('schedules.index') }}" class="nav-link @active(request()->routeIs('schedules.*'))">
                 <span class="nav-icon"><i class="fa-solid fa-clock"></i></span>
                 Schedules
+            </a>
+            <a href="{{ route('instructor-positions.index') }}" class="nav-link @active(request()->routeIs('instructor-positions.*'))">
+                <span class="nav-icon"><img class="nav-img" src="{{ asset('images/position.png') }}" alt=""></i></span>
+                Instructor Positions
             </a>
         </div>
 
@@ -92,13 +101,24 @@
                 <span class="nav-icon"><i class="fas fa-shield-alt"></i></span>
                 Permissions
             </a>
+            <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
+                Logout
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
         </div>
     </nav>
 
     <div class="sidebar-footer">
         <div class="user-info">
             <div class="avatar">
+            @if(auth()->user()->avatar)
+                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="Profile" class="avatar-image">
+                @else
                 <i class="fas fa-user"></i>
+                @endif
             </div>
             <div>
                 <div class="user-name">{{ $userName ?? 'Admin User' }}</div>

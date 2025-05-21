@@ -21,11 +21,11 @@ class RoomController extends Controller
             $search = $request->search;
             $query->where('roomname', 'like', "%{$search}%")
                   ->orWhereHas('department', function($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
+                      $q->where('roomname', 'like', "%{$search}%");
                   });
         }
         
-        $rooms = $query->paginate(10);
+        $rooms = $query->latest()->paginate(10);
         
         return view('rooms.index', compact('rooms'));
     }

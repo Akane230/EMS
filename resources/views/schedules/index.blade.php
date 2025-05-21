@@ -8,6 +8,12 @@
         <div class="dashboard-subtitle">Manage all class schedules in the system</div>
     </div>
 
+    @if(session('success'))
+    <div class="px-4 py-3 mb-6 border-l-4 border-green-500 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+        {{ session('success') }}
+    </div>
+    @endif
+
     <div class="flex items-center space-x-4 add-export-container">
         <a href="{{ route('schedules.create') }}" class="module-action">
             Add Schedule <i class="fas fa-plus ml-2"></i>
@@ -51,13 +57,7 @@
                     </div>
                 </form>
             </div>
-
-            @if(session('success'))
-            <div class="mb-4 px-4 py-2 border-l-4 border-green-500 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                {{ session('success') }}
-            </div>
-            @endif
-
+            
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
                     <thead class="bg-gray-50 dark:bg-gray-700">
@@ -112,16 +112,16 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="font-medium">{{ $schedule->course_code }}</div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ $schedule->course->name ?? 'N/A' }}</div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ $schedule->course->course_name ?? 'N/A' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                {{ $schedule->section->name ?? 'N/A' }}
+                                {{ $schedule->section->section_name ?? 'N/A' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 {{ $schedule->instructor->first_name ?? 'N/A' }} {{ $schedule->instructor->last_name ?? '' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                {{ $schedule->room->name ?? 'N/A' }}
+                                {{ $schedule->room->roomname ?? 'N/A' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">

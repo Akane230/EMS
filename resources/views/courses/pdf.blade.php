@@ -55,6 +55,7 @@
                 <th>Course Name</th>
                 <th>Credits</th>
                 <th>Description</th>
+                <th>Year Level</th>
                 <th>Program</th>
                 <th>Created Date</th>
                 <th>Last Updated</th>
@@ -67,6 +68,7 @@
                 <td>{{ $course->course_name }}</td>
                 <td>{{ $course->credits }}</td>
                 <td class="description">{{ $course->description }}</td>
+                <td>{{ $course->year_level }}</td>
                 <td>{{ $course->program ? $course->program->program_name : 'N/A' }}</td>
                 <td>{{ \Carbon\Carbon::parse($course->created_at)->format('m/d/Y') }}</td>
                 <td>{{ \Carbon\Carbon::parse($course->updated_at)->format('m/d/Y') }}</td>

@@ -17,10 +17,16 @@ class ProgramController extends Controller
     {
         $search = $request->input('search');
 
-        $programs = Program::when($search, function ($query, $search) {
-            return $query->where('id', 'like', "%{$search}%")
-                ->orWhere('program_name', 'like', "%{$search}%");
-        })->paginate(10);
+        $programs = Program::with('department') // Eager load the department
+            ->when($search, function ($query, $search) {
+                return $query->where('id', 'like', "%{$search}%")
+                    ->orWhere('program_name', 'like', "%{$search}%")
+                    ->orWhereHas('department', function ($q) use ($search) {
+                        $q->where('department_name', 'like', "%{$search}%");
+                    });
+            })
+            ->latest()
+            ->paginate(10);
 
         return view('programs.index', compact('programs'));
     }
@@ -62,7 +68,7 @@ class ProgramController extends Controller
      */
     public function show(Program $program)
     {
-        $program->load('department');
+        $program->load('department'); // Changed from 'departments' to 'department'
         return view('programs.show', compact('program'));
     }
 

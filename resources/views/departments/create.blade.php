@@ -26,7 +26,7 @@
             <div class="mb-6">
                 <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200">Description</label>
                 <textarea id="description" name="description" rows="4" 
-                    class="border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-200 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700"
+                    class="border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-200 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 input-padding"
                     placeholder="Enter department description" required>{{ old('description') }}</textarea>
                 @error('description')
                     <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>

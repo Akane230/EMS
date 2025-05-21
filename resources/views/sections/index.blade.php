@@ -8,6 +8,12 @@
         <div class="dashboard-subtitle">Manage all sections in the system</div>
     </div>
 
+    @if(session('success'))
+    <div class="px-4 py-3 mb-6 border-l-4 border-green-500 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+        {{ session('success') }}
+    </div>
+    @endif
+
     <div class="flex items-center space-x-4 add-export-container">
         <a href="{{ route('sections.create') }}" class="module-action">
             Add Section <i class="fas fa-plus ml-2"></i>
@@ -37,12 +43,6 @@
                 </form>
             </div>
 
-            @if(session('success'))
-            <div class="bg-green-100 border-l-4 border-green-500 text-green-800 dark:bg-green-900 dark:text-green-200 p-4 mb-6 rounded">
-                <p>{{ session('success') }}</p>
-            </div>
-            @endif
-
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
                     <thead class="bg-gray-50 dark:bg-gray-700">
@@ -62,7 +62,7 @@
                                 <div class="font-medium">{{ $section->section_name }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                {{ $section->program->name ?? 'N/A' }}
+                                {{ $section->program->program_name ?? 'N/A' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 {{ $section->created_at->format('M d, Y') }}
@@ -97,96 +97,7 @@
             </div>
 
             <div class="mt-6">
-                @if($sections->hasPages())
-                <div class="pagination-wrapper">
-                    <div class="flex items-center justify-between">
-                        <div class="flex-1 flex justify-between flex-wrap sm:hidden">
-                            {{-- Mobile pagination controls --}}
-                            @if($sections->onFirstPage())
-                            <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default rounded-md">
-                                Previous
-                            </span>
-                            @else
-                            <a href="{{ $sections->appends(request()->except('page'))->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                                Previous
-                            </a>
-                            @endif
-
-                            @if($sections->hasMorePages())
-                            <a href="{{ $sections->appends(request()->except('page'))->nextPageUrl() }}" class="ml-3 relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                                Next
-                            </a>
-                            @else
-                            <span class="ml-3 relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default rounded-md">
-                                Next
-                            </span>
-                            @endif
-                        </div>
-
-                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                            {{-- Results info --}}
-                            <div>
-                                <p class="text-sm text-gray-700 dark:text-gray-300">
-                                    Showing
-                                    <span class="font-medium">{{ $sections->firstItem() ?? 0 }}</span>
-                                    to
-                                    <span class="font-medium">{{ $sections->lastItem() ?? 0 }}</span>
-                                    of
-                                    <span class="font-medium">{{ $sections->total() }}</span>
-                                    results
-                                    @if(request('search'))
-                                    for "<span class="font-medium">{{ request('search') }}</span>"
-                                    @endif
-                                </p>
-                            </div>
-
-                            {{-- Desktop pagination links --}}
-                            <div>
-                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                    {{-- Previous Page Link --}}
-                                    @if($sections->onFirstPage())
-                                    <span class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400">
-                                        <span class="sr-only">Previous</span>
-                                        <i class="fas fa-chevron-left w-5 h-5"></i>
-                                    </span>
-                                    @else
-                                    <a href="{{ $sections->appends(request()->except('page'))->previousPageUrl() }}" rel="prev" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
-                                        <span class="sr-only">Previous</span>
-                                        <i class="fas fa-chevron-left w-5 h-5"></i>
-                                    </a>
-                                    @endif
-
-                                    {{-- Pagination Elements --}}
-                                    @foreach($sections->appends(request()->except('page'))->getUrlRange(1, $sections->lastPage()) as $page => $url)
-                                    @if($page == $sections->currentPage())
-                                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-primary-50 dark:bg-primary-900 text-sm font-medium text-primary-600 dark:text-primary-300">
-                                        {{ $page }}
-                                    </span>
-                                    @else
-                                    <a href="{{ $url }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-                                        {{ $page }}
-                                    </a>
-                                    @endif
-                                    @endforeach
-
-                                    {{-- Next Page Link --}}
-                                    @if($sections->hasMorePages())
-                                    <a href="{{ $sections->appends(request()->except('page'))->nextPageUrl() }}" rel="next" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">
-                                        <span class="sr-only">Next</span>
-                                        <i class="fas fa-chevron-right w-5 h-5"></i>
-                                    </a>
-                                    @else
-                                    <span class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400">
-                                        <span class="sr-only">Next</span>
-                                        <i class="fas fa-chevron-right w-5 h-5"></i>
-                                    </span>
-                                    @endif
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endif
+                {{ $sections->links() }}
             </div>
         </div>
     </div>

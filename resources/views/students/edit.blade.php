@@ -112,6 +112,11 @@
                             <option value="Inactive" {{ old('status', $student->status) === 'Inactive' ? 'selected' : '' }}>Inactive</option>
                         </select>
                     </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">User ID (Optional)</label>
+                        <input type="number" name="user_id" value="{{ old('user_id') }}"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                    </div>
                 </div>
 
                 <div class="flex justify-end space-x-4 mt-8">

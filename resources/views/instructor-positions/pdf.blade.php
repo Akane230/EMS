@@ -84,10 +84,10 @@
             @foreach($instructorPositions as $assignment)
             <tr>
                 <td>{{ $assignment->id }}</td>
-                <td>{{ $assignment->instructor->name ?? 'N/A' }}</td>
+                <td>{{ $assignment->instructor->first_name ?? 'N/A' }} {{ $assignment->instructor->last_name ?? 'N/A' }}</td>
                 <td>{{ $assignment->instructor->email ?? 'N/A' }}</td>
-                <td>{{ $assignment->position->title ?? 'N/A' }}</td>
-                <td>{{ $assignment->position->department ?? 'N/A' }}</td>
+                <td>{{ $assignment->position->position_name ?? 'N/A' }}</td>
+                <td>{{ $assignment->position->department->department_name ?? 'N/A' }}</td>
                 <td>{{ $assignment->created_at->format('m/d/Y') }}</td>
             </tr>
             @endforeach

@@ -18,11 +18,11 @@ class InstructorPosition extends Model
         'position_id',
     ];
 
-    public function instructors(){
+    public function instructor(){
         return $this->belongsTo(Instructor::class);
     }
     
-    public function positions(){
+    public function position(){
         return $this->belongsTo(Position::class);
     }
 }

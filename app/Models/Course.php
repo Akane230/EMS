@@ -18,11 +18,12 @@ class Course extends Model
         'course_code',
         'course_name',
         'credits',
+        'year_level',
         'description',
-        'program',
+        'program_id',
     ];
 
-    public function programs()
+    public function program()
     {
         return $this->belongsTo(Program::class);
     }
@@ -32,6 +33,12 @@ class Course extends Model
     }
     public function enrollments()
     {
-        return $this->hasMany(Enrollment::class);
+        return $this->hasMany(Enrollment::class, 'course_code', 'course_code');
+    }
+    public function isGeneralEducation(): bool
+    {
+        $program = $this->program;
+
+        return $program && $program->program_name === 'General Education';
     }
 }

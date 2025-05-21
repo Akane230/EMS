@@ -100,11 +100,11 @@
                     </td>
                     <td>
                         <strong>{{ $schedule->course_code }}</strong><br>
-                        <span class="small-text">{{ $schedule->course->name ?? 'N/A' }}</span>
+                        <span class="small-text">{{ $schedule->course->course_name ?? 'N/A' }}</span>
                     </td>
-                    <td>{{ $schedule->section->name ?? 'N/A' }}</td>
+                    <td>{{ $schedule->section->section_name ?? 'N/A' }}</td>
                     <td>{{ $schedule->instructor->first_name ?? 'N/A' }} {{ $schedule->instructor->last_name ?? '' }}</td>
-                    <td>{{ $schedule->room->name ?? 'N/A' }}</td>
+                    <td>{{ $schedule->room->roomname ?? 'N/A' }}</td>
                 </tr>
                 @endforeach
             </tbody>

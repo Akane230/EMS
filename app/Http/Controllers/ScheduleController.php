@@ -46,7 +46,7 @@ class ScheduleController extends Controller
             $query->where('day', $request->day);
         }
         
-        $schedules = $query->paginate(10);
+        $schedules = $query->latest()->paginate(10);
         
         return view('schedules.index', compact('schedules'));
     }

@@ -30,7 +30,7 @@ return new class extends Migration
         $table->timestamps();
     });
 
-    DB::statement('ALTER TABLE students AUTO_INCREMENT = 2025;');
+    DB::statement('ALTER TABLE students AUTO_INCREMENT = 2025000000;');
 
 }
 

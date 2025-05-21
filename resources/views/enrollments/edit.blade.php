@@ -51,7 +51,7 @@
                             <option value="">Select Term</option>
                             @foreach($terms as $term)
                                 <option value="{{ $term->id }}" {{ $enrollment->term_id == $term->id ? 'selected' : '' }}>
-                                    {{ $term->name }}
+                                    {{ $term->schoolyear_semester }}
                                 </option>
                             @endforeach
                         </select>
@@ -77,7 +77,7 @@
                             <option value="">Select Section</option>
                             @foreach($sections as $section)
                                 <option value="{{ $section->id }}" {{ $enrollment->section_id == $section->id ? 'selected' : '' }}>
-                                    {{ $section->name }}
+                                    {{ $section->section_name }}
                                 </option>
                             @endforeach
                         </select>

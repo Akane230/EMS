@@ -19,17 +19,32 @@
             <form action="{{ route('positions.update', $position->id) }}" method="POST">
                 @csrf
                 @method('PUT')
-                
+
                 <div class="mb-6">
                     <label for="position_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Position Name</label>
-                    <input type="text" name="position_name" id="position_name" value="{{ old('position_name', $position->position_name) }}" 
-                           class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('position_name') border-red-500 @enderror" 
-                           required>
+                    <input type="text" name="position_name" id="position_name" value="{{ old('position_name', $position->position_name) }}"
+                        class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('position_name') border-red-500 @enderror input-padding"
+                        required>
                     @error('position_name')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
-                
+
+                <div class="mb-6">
+                    <label for="department_id" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Department</label>
+                    <select id="department_id" name="department_id" class="w-full pl-4 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                        <option value="">Select Department</option>
+                        @foreach($departments as $department)
+                        <option value="{{ $department->id }}" {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                            {{ $department->department_name }}
+                        </option>
+                        @endforeach
+                    </select>
+                    @error('department_id')
+                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <div class="flex justify-end">
                     <button type="submit" class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition">
                         Update Position

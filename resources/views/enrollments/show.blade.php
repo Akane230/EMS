@@ -65,11 +65,11 @@
                         </div>
                         <div>
                             <span class="text-gray-500 dark:text-gray-400">Term:</span>
-                            <span class="font-medium ml-2">{{ $enrollment->term->name ?? 'N/A' }}</span>
+                            <span class="font-medium ml-2">{{ $enrollment->term->schoolyear_semester ?? 'N/A' }}</span>
                         </div>
                         <div>
                             <span class="text-gray-500 dark:text-gray-400">Section:</span>
-                            <span class="font-medium ml-2">{{ $enrollment->section->name ?? 'N/A' }}</span>
+                            <span class="font-medium ml-2">{{ $enrollment->section->section_name ?? 'N/A' }}</span>
                         </div>
                     </div>
                 </div>
@@ -86,10 +86,10 @@
                             <span class="text-gray-500 dark:text-gray-400">Time:</span>
                             <span class="font-medium ml-2">
                                 @if($enrollment->schedule)
-                                    {{ \Carbon\Carbon::parse($enrollment->schedule->starting_time ?? '')->format('h:i A') }} - 
-                                    {{ \Carbon\Carbon::parse($enrollment->schedule->ending_time ?? '')->format('h:i A') }}
+                                {{ \Carbon\Carbon::parse($enrollment->schedule->starting_time ?? '')->format('h:i A') }} -
+                                {{ \Carbon\Carbon::parse($enrollment->schedule->ending_time ?? '')->format('h:i A') }}
                                 @else
-                                    N/A
+                                N/A
                                 @endif
                             </span>
                         </div>
@@ -125,13 +125,13 @@
                     Back to List
                 </a>
                 <div class="flex space-x-2">
-                    <a href="{{ route('enrollments.edit', $enrollment->id) }}" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition">
+                    <a href="{{ route('enrollments.edit', $enrollment->id) }}" class="px-4 py-2 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-lg hover:bg-yellow-200 dark:hover:bg-yellow-800 transition">
                         <i class="fas fa-edit mr-2"></i> Edit
                     </a>
                     <form action="{{ route('enrollments.destroy', $enrollment->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition" onclick="return confirm('Are you sure you want to delete this enrollment?')">
+                        <button type="submit" class="px-4 py-2 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition" onclick="return confirm('Are you sure you want to delete this enrollment?')">
                             <i class="fas fa-trash mr-2"></i> Delete
                         </button>
                     </form>

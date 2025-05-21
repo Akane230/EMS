@@ -8,6 +8,12 @@
         <div class="dashboard-subtitle">Manage all student course enrollments in the system</div>
     </div>
 
+    @if(session('success'))
+    <div class="px-4 py-3 mb-6 border-l-4 border-green-500 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+        {{ session('success') }}
+    </div>
+    @endif
+
     <div class="flex items-center space-x-4 add-export-container">
         <a href="{{ route('enrollments.create') }}" class="module-action">
             Add Enrollment <i class="fas fa-plus ml-2"></i>
@@ -33,7 +39,10 @@
                                 <option value="">All Terms</option>
                                 @foreach($terms as $term)
                                     <option value="{{ $term->id }}" {{ request('term_id') == $term->id ? 'selected' : '' }}>
-                                        {{ $term->name }}
+                                        {{ $term->schoolyear_semester }} 
+                                        <span class="text-sm text-gray-500">
+                                            ({{ ucfirst($term->status) }})
+                                        </span>
                                     </option>
                                 @endforeach
                             </select>
@@ -61,17 +70,12 @@
                 </form>
             </div>
 
-            @if(session('success'))
-            <div class="mb-4 px-4 py-2 border-l-4 border-green-500 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                {{ session('success') }}
-            </div>
-            @endif
-
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Student</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Program</th>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Term</th>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Course</th>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Section</th>
@@ -88,14 +92,17 @@
                                 <div class="text-sm text-gray-500 dark:text-gray-400">ID: {{ $enrollment->student->id ?? 'N/A' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                {{ $enrollment->term->name ?? 'N/A' }}
+                                {{ $enrollment->course->program->program_name ?? 'N/A' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ $enrollment->term->schoolyear_semester ?? 'N/A' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="font-medium">{{ $enrollment->course_code }}</div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ $enrollment->course->name ?? 'N/A' }}</div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400">{{ $enrollment->course->course_name ?? 'N/A' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                {{ $enrollment->section->name ?? 'N/A' }}
+                                {{ $enrollment->section->section_name ?? 'N/A' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($enrollment->schedule)

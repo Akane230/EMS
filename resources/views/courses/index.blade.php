@@ -8,6 +8,12 @@
         <div class="dashboard-subtitle">Manage all courses in the system</div>
     </div>
 
+    @if(session('success'))
+    <div class="px-4 py-3 mb-6 border-l-4 border-green-500 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+        {{ session('success') }}
+    </div>
+    @endif
+
     <div class="flex justify-between items-center mb-4 add-export-container">
         <a href="{{ route('courses.create') }}" class="module-action">
             Add Course <i class="fas fa-plus ml-2"></i>
@@ -40,12 +46,6 @@
                 </form>
             </div>
 
-            @if ($message = Session::get('success'))
-            <div class="mb-6 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg" role="alert">
-                <p>{{ $message }}</p>
-            </div>
-            @endif
-
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
                     <thead class="bg-gray-50 dark:bg-gray-700">
@@ -53,6 +53,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Code</th>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Name</th>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Credits</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Year Level</th>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Program</th>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
                         </tr>
@@ -63,7 +64,8 @@
                             <td class="px-6 py-4 whitespace-nowrap">{{ $course->course_code }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $course->course_name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $course->credits }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ $course->program->name ?? 'N/A' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $course->year_level }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $course->program->program_name ?? 'N/A' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">
                                     <a href="{{ route('courses.show', $course->course_code) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">

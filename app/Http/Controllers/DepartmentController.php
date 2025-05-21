@@ -20,7 +20,7 @@ class DepartmentController extends Controller
         $departments = Department::when($search, function ($query, $search) {
             return $query->where('id', 'like', "%{$search}%")
                 ->orWhere('department_name', 'like', "%{$search}%");
-        })->paginate(10);
+        })->latest()->paginate(10);
 
         return view('departments.index', compact('departments'));
     }

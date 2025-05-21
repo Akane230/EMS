@@ -20,7 +20,7 @@ class InstructorController extends Controller
                 ->orWhere('first_name', 'like', "%{$search}%")
                 ->orWhere('last_name', 'like', "%{$search}%")
                 ->orWhere('email', 'like', "%{$search}%");
-        })->paginate(10);
+        })->latest()->paginate(10);
 
         return view('instructors.index', compact('instructors'));
     }

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Student;
 use App\Models\Course;
 use App\Models\Instructor;
+use App\Models\Department;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -26,5 +27,6 @@ class DatabaseSeeder extends Seeder
         Student::factory(10)->create();
         Course::factory(10)->create();
         Instructor::factory(10)->create();
+        Department::factory(10)->create();
     }
 }

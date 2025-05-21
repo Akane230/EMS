@@ -8,8 +8,12 @@ use App\Models\Term;
 use App\Models\Course;
 use App\Models\Section;
 use App\Models\Schedule;
+use App\Models\Program;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 
 class EnrollmentsController extends Controller
 {
@@ -28,10 +32,10 @@ class EnrollmentsController extends Controller
                 $q->where('first_name', 'like', "%{$search}%")
                     ->orWhere('last_name', 'like', "%{$search}%");
             })
-            ->orWhereHas('course', function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('course_code', 'like', "%{$search}%");
-            });
+                ->orWhereHas('course', function ($q) use ($search) {
+                    $q->where('course_name', 'like', "%{$search}%")
+                        ->orWhere('course_code', 'like', "%{$search}%");
+                });
         }
 
         // Filter by term
@@ -57,11 +61,19 @@ class EnrollmentsController extends Controller
     {
         $students = Student::orderBy('last_name')->get();
         $terms = Term::all();
-        $courses = Course::all();
+        $programs = Program::all();
+        $courses = Course::with('program')->get();
         $sections = Section::all();
         $schedules = Schedule::with(['course', 'section', 'room', 'instructor'])->get();
-        
-        return view('enrollments.create', compact('students', 'terms', 'courses', 'sections', 'schedules'));
+
+        return view('enrollments.create', compact(
+            'students',
+            'terms',
+            'programs',
+            'courses',
+            'sections',
+            'schedules'
+        ));
     }
 
     /**
@@ -72,16 +84,39 @@ class EnrollmentsController extends Controller
         $request->validate([
             'student_id' => 'required|exists:students,id',
             'term_id' => 'required|exists:terms,id',
-            'course_code' => 'required|exists:courses,course_code',
-            'section_id' => 'required|exists:sections,id',
-            'schedule_id' => 'required|exists:schedules,id',
+            'program_id' => 'required|exists:programs,id',
             'year_level' => 'required|integer|min:1|max:5',
+            'section_id' => 'required|exists:sections,id',
+            'course_codes' => 'required|array|min:1',
+            'course_codes.*' => 'required|exists:courses,course_code',
+            'schedule_ids' => 'required|array',
+            'schedule_ids.*' => 'nullable|exists:schedules,id',
         ]);
 
-        Enrollment::create($request->all());
+        try {
+            DB::beginTransaction();
 
-        return redirect()->route('enrollments.index')
-            ->with('success', 'Enrollment record created successfully.');
+            $enrollments = [];
+            foreach ($request->course_codes as $courseCode) {
+                $enrollment = Enrollment::create([
+                    'student_id' => $request->student_id,
+                    'term_id' => $request->term_id,
+                    'course_code' => $courseCode,
+                    'section_id' => $request->section_id,
+                    'schedule_id' => $request->schedule_ids[$courseCode] ?? null,
+                    'year_level' => $request->year_level,
+                ]);
+                $enrollments[] = $enrollment;
+            }
+
+            DB::commit();
+
+            return redirect()->route('enrollments.index')
+                ->with('success', count($enrollments) . ' courses enrolled successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Error creating enrollments: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -117,7 +152,7 @@ class EnrollmentsController extends Controller
             'term_id' => 'required|exists:terms,id',
             'course_code' => 'required|exists:courses,course_code',
             'section_id' => 'required|exists:sections,id',
-            'schedule_id' => 'required|exists:schedules,id',
+            'schedule_id' => 'nullable|exists:schedules,id',
             'year_level' => 'required|integer|min:1|max:5',
         ]);
 
@@ -162,5 +197,152 @@ class EnrollmentsController extends Controller
         ]);
 
         return $pdf->download('enrollment_records_' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    public function createBulk()
+    {
+        $students = Student::orderBy('last_name')->get();
+        $terms = Term::all();
+        $programs = Program::all();
+        $courses = Course::all();
+        $sections = Section::all();
+
+        return view('enrollments.create-bulk', compact('students', 'terms', 'programs', 'courses', 'sections'));
+    }
+
+    /**
+     * Get courses by program ID
+     */
+    /**
+     * Get courses by program ID, including general education courses
+     */
+    public function getCoursesByProgram(Request $request)
+    {
+        $programId = $request->program_id;
+
+        // Get the general education program ID
+        $genEdProgramId = Program::where('program_name', 'General Education')->value('id');
+
+        // If general education program exists, fetch both program-specific and gen-ed courses
+        if ($genEdProgramId) {
+            $courses = Course::where(function ($query) use ($programId, $genEdProgramId) {
+                $query->where('program_id', $programId)
+                    ->orWhere('program_id', $genEdProgramId);
+            })
+            ->orderBy('course_code')
+            ->get();
+        } else {
+            // If no general education program exists, just get program-specific courses
+            $courses = Course::where('program_id', $programId)
+                ->orderBy('course_code')
+                ->get();
+        }
+
+        return response()->json($courses);
+    }
+
+    /**
+     * Get sections by program ID
+     */
+    public function getSectionsByProgram(Request $request)
+    {
+        $programId = $request->program_id;
+
+        $sections = Section::where('program_id', $programId)
+            ->orderBy('section_name')
+            ->get();
+
+        return response()->json($sections);
+    }
+
+    /**
+     * Get schedules by course code and section ID
+     */
+    /**
+     * Get schedules by course code and section ID for both program-specific and general education courses
+     */
+    /**
+     * Debug and fixed version of getSchedulesByCourseAndSection method
+     */
+    /**
+     * Debug and fixed version of getSchedulesByCourseAndSection method
+     */
+    /**
+     * A more flexible approach to finding available schedules
+     */
+    public function getSchedulesByCourseAndSection(Request $request)
+    {
+        $courseCode = $request->course_code;
+        $sectionId = $request->section_id;
+
+        // Get schedules with eager loading for relationships
+        $query = Schedule::with(['room', 'instructor'])
+            ->where('course_code', $courseCode);
+
+        // Try to find schedules for this specific section first
+        $specificSchedules = clone $query;
+        $specificSchedules->where('section_id', $sectionId);
+        $schedules = $specificSchedules->get();
+
+        // If no schedules found for this specific combination, find ANY schedules for this course
+        if ($schedules->isEmpty()) {
+            $schedules = $query->get();
+        }
+
+        return response()->json($schedules);
+    }
+
+    /**
+     * Store multiple enrollments in a single transaction
+     */
+    public function storeBulk(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'term_id' => 'required|exists:terms,id',
+            'program_id' => 'required|exists:programs,id',
+            'year_level' => 'required|integer|min:1|max:5',
+            'course_ids' => 'required|array|min:1',
+            'course_ids.*' => 'required|exists:courses,course_code',
+            'section_id' => 'required|exists:sections,id',
+            'schedule_ids' => 'required|array|min:1',
+            'schedule_ids.*' => 'nullable|exists:schedules,id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $studentId = $request->student_id;
+            $termId = $request->term_id;
+            $yearLevel = $request->year_level;
+            $sectionId = $request->section_id;
+            $courseCodes = $request->course_ids;
+            $scheduleIds = $request->schedule_ids;
+
+            $created = [];
+
+            foreach ($courseCodes as $index => $courseCode) {
+                $scheduleId = $scheduleIds[$courseCode] ?? null;
+
+                $enrollment = Enrollment::create([
+                    'student_id' => $studentId,
+                    'term_id' => $termId,
+                    'course_code' => $courseCode,
+                    'section_id' => $sectionId,
+                    'schedule_id' => $scheduleId,
+                    'year_level' => $yearLevel,
+                ]);
+
+                $created[] = $enrollment;
+            }
+
+            DB::commit();
+
+            return redirect()->route('enrollments.index')
+                ->with('success', count($created) . ' enrollment records created successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()])->withInput();
+        }
     }
 }

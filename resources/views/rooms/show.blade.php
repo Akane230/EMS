@@ -16,13 +16,13 @@
                 </a>
                 
                 <div class="flex space-x-2">
-                    <a href="{{ route('rooms.edit', $room->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition">
+                    <a href="{{ route('rooms.edit', $room->id) }}" class="px-4 py-2 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-lg hover:bg-yellow-200 dark:hover:bg-yellow-800 transition">
                         <i class="fas fa-edit mr-2"></i> Edit
                     </a>
                     <form action="{{ route('rooms.destroy', $room->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition" onclick="return confirm('Are you sure you want to delete this room?')">
+                        <button type="submit" class="px-4 py-2 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition" onclick="return confirm('Are you sure you want to delete this room?')">
                             <i class="fas fa-trash mr-2"></i> Delete
                         </button>
                     </form>
@@ -61,7 +61,7 @@
                                 Department
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
-                                {{ $room->department->name }}
+                                {{ $room->department->department_name }}
                             </dd>
                         </div>
                         <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

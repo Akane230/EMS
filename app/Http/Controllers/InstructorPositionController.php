@@ -21,13 +21,13 @@ class InstructorPositionController extends Controller
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->whereHas('instructor', function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%");
+                $q->where('first_name', 'like', "%{$search}%");
             })->orWhereHas('position', function($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%");
             });
         }
         
-        $instructorPositions = $query->paginate(10);
+        $instructorPositions = $query->latest()->paginate(10);
         
         return view('instructor-positions.index', compact('instructorPositions'));
     }

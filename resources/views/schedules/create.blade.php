@@ -25,7 +25,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
                         <label for="day" class="block mb-2 text-sm font-medium">Day</label>
-                        <select id="day" name="day" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                        <select id="day" name="day" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" required>
                             <option value="">Select Day</option>
                             @foreach($days as $day)
                             <option value="{{ $day }}" {{ old('day') == $day ? 'selected' : '' }}>{{ $day }}</option>
@@ -35,11 +35,11 @@
 
                     <div>
                         <label for="course_code" class="block mb-2 text-sm font-medium">Course</label>
-                        <select id="course_code" name="course_code" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                        <select id="course_code" name="course_code" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" required>
                             <option value="">Select Course</option>
                             @foreach($courses as $course)
                             <option value="{{ $course->course_code }}" {{ old('course_code') == $course->course_code ? 'selected' : '' }}>
-                                {{ $course->course_code }} - {{ $course->name }}
+                                {{ $course->course_code }} - {{ $course->course_name }}
                             </option>
                             @endforeach
                         </select>
@@ -47,11 +47,11 @@
 
                     <div>
                         <label for="section_id" class="block mb-2 text-sm font-medium">Section</label>
-                        <select id="section_id" name="section_id" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                        <select id="section_id" name="section_id" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" required>
                             <option value="">Select Section</option>
                             @foreach($sections as $section)
                             <option value="{{ $section->id }}" {{ old('section_id') == $section->id ? 'selected' : '' }}>
-                                {{ $section->name }}
+                                {{ $section->section_name }}
                             </option>
                             @endforeach
                         </select>
@@ -59,7 +59,7 @@
 
                     <div>
                         <label for="instructor_id" class="block mb-2 text-sm font-medium">Instructor</label>
-                        <select id="instructor_id" name="instructor_id" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                        <select id="instructor_id" name="instructor_id" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" required>
                             <option value="">Select Instructor</option>
                             @foreach($instructors as $instructor)
                             <option value="{{ $instructor->id }}" {{ old('instructor_id') == $instructor->id ? 'selected' : '' }}>
@@ -71,11 +71,11 @@
 
                     <div>
                         <label for="room_id" class="block mb-2 text-sm font-medium">Room</label>
-                        <select id="room_id" name="room_id" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                        <select id="room_id" name="room_id" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" required>
                             <option value="">Select Room</option>
                             @foreach($rooms as $room)
                             <option value="{{ $room->id }}" {{ old('room_id') == $room->id ? 'selected' : '' }}>
-                                {{ $room->name }}
+                                {{ $room->roomname }}
                             </option>
                             @endforeach
                         </select>
@@ -83,12 +83,12 @@
 
                     <div>
                         <label for="starting_time" class="block mb-2 text-sm font-medium">Starting Time</label>
-                        <input type="time" id="starting_time" name="starting_time" value="{{ old('starting_time') }}" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                        <input type="time" id="starting_time" name="starting_time" value="{{ old('starting_time') }}" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" required>
                     </div>
 
                     <div>
                         <label for="ending_time" class="block mb-2 text-sm font-medium">Ending Time</label>
-                        <input type="time" id="ending_time" name="ending_time" value="{{ old('ending_time') }}" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                        <input type="time" id="ending_time" name="ending_time" value="{{ old('ending_time') }}" class="w-full p-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" required>
                     </div>
                 </div>
 

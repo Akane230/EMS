@@ -16,7 +16,7 @@ class Room extends Model
         'department_id',
     ];
 
-    public function departments(){
+    public function department(){
         return $this->belongsTo(Department::class);
     }
     

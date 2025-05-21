@@ -47,14 +47,14 @@
             </div>
 
             <div class="flex space-x-4 mt-8">
-                <a href="{{ route('instructors.edit', $instructor->id) }}" class="px-6 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition">
-                    Edit Instructor
+                <a href="{{ route('instructors.edit', $instructor->id) }}" class="px-4 py-2 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-lg hover:bg-yellow-200 dark:hover:bg-yellow-800 transition">
+                    Edit Instructor <i class="fas fa-edit ml-2"></i>
                 </a>
                 <form action="{{ route('instructors.destroy', $instructor->id) }}" method="POST" class="inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition" onclick="return confirm('Are you sure you want to delete this instructor?')">
-                        Delete Instructor
+                    <button type="submit" class="px-4 py-2 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition" onclick="return confirm('Are you sure you want to delete this instructor?')">
+                        Delete Instructor <i class="fas fa-trash ml-2"></i>
                     </button>
                 </form>
             </div>

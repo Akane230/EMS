@@ -23,23 +23,69 @@ class Schedule extends Model
         'room_id',
     ];
 
-    public function courses(){
-        return $this->belongsTo(Course::class);
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'course_code', 'course_code');
     }
 
-    public function sections(){
+    public function section()
+    {
         return $this->belongsTo(Section::class);
     }
-    
-    public function instructors(){
+
+    public function instructor()
+    {
         return $this->belongsTo(Instructor::class);
     }
 
-    public function rooms(){
+    public function room()
+    {
         return $this->belongsTo(Room::class);
     }
-    
-    public function enrollments(){
+
+    public function enrollments()
+    {
         return $this->hasMany(Enrollment::class);
+    }
+
+    public function getFormattedStartTimeAttribute(): string
+    {
+        if (!$this->starting_time) {
+            return 'N/A';
+        }
+
+        return date('h:i A', strtotime($this->starting_time));
+    }
+
+    /**
+     * Format the ending time
+     * 
+     * @return string
+     */
+    public function getFormattedEndTimeAttribute(): string
+    {
+        if (!$this->ending_time) {
+            return 'N/A';
+        }
+
+        return date('h:i A', strtotime($this->ending_time));
+    }
+
+    /**
+     * Get the formatted schedule display
+     * 
+     * @return string
+     */
+    public function getScheduleDisplayAttribute(): string
+    {
+        $day = $this->day ?: 'Unspecified Day';
+        $startTime = $this->formatted_start_time;
+        $endTime = $this->formatted_end_time;
+        $instructorName = $this->instructor ?
+            trim($this->instructor->last_name . ', ' . $this->instructor->first_name) :
+            'No Instructor';
+        $roomName = $this->room ? $this->room->name : 'No Room';
+
+        return "{$day}: {$startTime}-{$endTime} | {$instructorName} | {$roomName}";
     }
 }

@@ -16,7 +16,7 @@ class Section extends Model
         'program_id',
     ];
 
-    public function programs(){
+    public function program(){
         return $this->belongsTo(Program::class);
     }
     public function enrollments(){

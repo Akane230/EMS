@@ -10,10 +10,10 @@
 
     <div class="max-w-7xl mx-auto">
         <div class="flex items-center space-x-4 add-export-container">
-            <a href="{{ route('users.index') }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+            <a href="{{ route('users.index') }}" class="px-4 py-2 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-lg hover:bg-yellow-200 dark:hover:bg-yellow-800 transition">
                 <i class="fas fa-arrow-left mr-2"></i> Back to Users
             </a>
-            <a href="{{ route('users.edit', $user->id) }}" class="module-action">
+            <a href="{{ route('users.edit', $user->id) }}" class="px-4 py-2 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition">
                 <i class="fas fa-edit mr-2"></i> Edit User
             </a>
         </div>

@@ -22,7 +22,7 @@ class SectionController extends Controller
             $search = $request->search;
             $query->where('section_name', 'like', "%{$search}%")
                   ->orWhereHas('program', function($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
+                      $q->where('program_name', 'like', "%{$search}%");
                   });
         }
         
@@ -132,5 +132,43 @@ class SectionController extends Controller
         ]);
 
         return $pdf->download('section_records_' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Get sections by program ID (for AJAX)
+     */
+    public function getSectionsByProgram(Request $request)
+    {
+        \Log::info('SectionController::getSectionsByProgram called', [
+            'program_id' => $request->program_id,
+            'user' => auth()->user(),
+            'request_data' => $request->all()
+        ]);
+
+        try {
+            $request->validate([
+                'program_id' => 'required|exists:programs,id'
+            ]);
+
+            $programId = $request->program_id;
+
+            $sections = Section::where('program_id', $programId)
+                ->orderBy('section_name')
+                ->get();
+
+            \Log::info('Sections found', [
+                'program_id' => $programId,
+                'count' => $sections->count(),
+                'sections' => $sections->toArray()
+            ]);
+
+            return response()->json($sections);
+        } catch (\Exception $e) {
+            \Log::error('Error in getSectionsByProgram', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

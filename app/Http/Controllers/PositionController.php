@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Position;
+use App\Models\Department; // Add this import
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -15,11 +16,16 @@ class PositionController extends Controller
     {
         $search = $request->input('search');
         
-        $positions = Position::when($search, function($query, $search) {
-            return $query->where('position_name', 'like', "%{$search}%");
-        })
-        ->orderBy('position_name')
-        ->paginate(10);
+        $positions = Position::with('department') // Eager load department
+            ->when($search, function($query, $search) {
+                return $query->where('position_name', 'like', "%{$search}%")
+                    ->orWhereHas('department', function($q) use ($search) {
+                        $q->where('department_name', 'like', "%{$search}%");
+                    });
+            })
+            ->latest()
+            ->orderBy('position_name')
+            ->paginate(10);
         
         return view('positions.index', compact('positions'));
     }
@@ -29,7 +35,8 @@ class PositionController extends Controller
      */
     public function create()
     {
-        return view('positions.create');
+        $departments = Department::all(); // Get all departments
+        return view('positions.create', compact('departments'));
     }
 
     /**
@@ -39,10 +46,12 @@ class PositionController extends Controller
     {
         $request->validate([
             'position_name' => 'required|string|max:100|unique:positions',
+            'department_id' => 'nullable|exists:departments,id',
         ]);
 
         Position::create([
             'position_name' => $request->position_name,
+            'department_id' => $request->department_id,
         ]);
 
         return redirect()->route('positions.index')
@@ -54,6 +63,7 @@ class PositionController extends Controller
      */
     public function show(Position $position)
     {
+        $position->load('department'); // Eager load department
         return view('positions.show', compact('position'));
     }
 
@@ -62,7 +72,8 @@ class PositionController extends Controller
      */
     public function edit(Position $position)
     {
-        return view('positions.edit', compact('position'));
+        $departments = Department::all(); // Get all departments
+        return view('positions.edit', compact('position', 'departments'));
     }
 
     /**
@@ -72,10 +83,12 @@ class PositionController extends Controller
     {
         $request->validate([
             'position_name' => 'required|string|max:100|unique:positions,position_name,' . $position->id,
+            'department_id' => 'nullable|exists:departments,id',
         ]);
 
         $position->update([
             'position_name' => $request->position_name,
+            'department_id' => $request->department_id,
         ]);
 
         return redirect()->route('positions.index')
@@ -98,7 +111,9 @@ class PositionController extends Controller
      */
     public function exportPdf()
     {
-        $positions = Position::orderBy('position_name')->get();
+        $positions = Position::with('department') // Include department in PDF
+            ->orderBy('position_name')
+            ->get();
 
         $pdf = PDF::loadView('positions.pdf', [
             'positions' => $positions,

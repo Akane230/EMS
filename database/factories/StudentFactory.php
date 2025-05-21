@@ -20,7 +20,7 @@ class StudentFactory extends Factory
             'city' => $this->faker->city,
             'street' => $this->faker->streetAddress,
             'zipcode' => $this->faker->postcode,
-            'status' => fake()->randomElement(['Regular', 'Irregular', 'Active', 'Inactive',]),
+            'status' => fake()->randomElement(['Regular', 'Irregular']),
             'contact_number' => $this->faker->phoneNumber,
         ];
     }

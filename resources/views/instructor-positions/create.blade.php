@@ -37,7 +37,7 @@
                             <option value="">-- Select Instructor --</option>
                             @foreach($instructors as $instructor)
                                 <option value="{{ $instructor->id }}" {{ old('instructor_id') == $instructor->id ? 'selected' : '' }}>
-                                    {{ $instructor->name }}
+                                    {{ $instructor->first_name }} {{ $instructor->last_name }}
                                 </option>
                             @endforeach
                         </select>
@@ -49,7 +49,7 @@
                             <option value="">-- Select Position --</option>
                             @foreach($positions as $position)
                                 <option value="{{ $position->id }}" {{ old('position_id') == $position->id ? 'selected' : '' }}>
-                                    {{ $position->title }} ({{ $position->department }})
+                                    {{ $position->position_name }} {{ $position->department->department_name ?? 'N/A'}}
                                 </option>
                             @endforeach
                         </select>

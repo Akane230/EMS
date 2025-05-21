@@ -22,9 +22,21 @@
                 <div class="mb-6">
                     <label for="schoolyear_semester" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">School Year/Semester <span class="text-red-600">*</span></label>
                     <input type="text" name="schoolyear_semester" id="schoolyear_semester" value="{{ old('schoolyear_semester') }}" 
-                        class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding"
                         placeholder="e.g. 2025-2026 First Semester" required>
                     @error('schoolyear_semester')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-6">  
+                    <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status <span class="text-red-600">*</span></label>
+                    <select name="status" id="status" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" required>
+                        <option value="active">Active</option>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    @error('status')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
@@ -32,7 +44,7 @@
                 <div class="mb-6">
                     <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date <span class="text-red-600">*</span></label>
                     <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}" 
-                        class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding"
                         required>
                     @error('start_date')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -42,7 +54,7 @@
                 <div class="mb-6">
                     <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End Date <span class="text-red-600">*</span></label>
                     <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}" 
-                        class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding"
                         required>
                     @error('end_date')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>

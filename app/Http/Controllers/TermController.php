@@ -20,7 +20,7 @@ class TermController extends Controller
             $query->where('schoolyear_semester', 'like', "%{$search}%");
         }
 
-        $terms = $query->orderBy('start_date', 'desc')->paginate(10);
+        $terms = $query->orderBy('start_date', 'desc')->latest()->paginate(10);
 
         return view('terms.index', compact('terms'));
     }
@@ -40,6 +40,7 @@ class TermController extends Controller
     {
         $validated = $request->validate([
             'schoolyear_semester' => 'required|string|max:50',
+            'status' => 'required|string|max:50',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
@@ -73,6 +74,7 @@ class TermController extends Controller
     {
         $validated = $request->validate([
             'schoolyear_semester' => 'required|string|max:50',
+            'status' => 'required|string|max:50',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);

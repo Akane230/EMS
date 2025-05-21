@@ -19,9 +19,9 @@ class CourseController extends Controller
 
         $courses = Course::when($search, function ($query, $search) {
             return $query->where('course_code', 'like', "%{$search}%")
-                ->orWhere('title', 'like', "%{$search}%")
+                ->orWhere('course_name', 'like', "%{$search}%")
                 ->orWhere('description', 'like', "%{$search}%");
-        })->paginate(10);
+        })->latest()->paginate(10);
 
         return view('courses.index', compact('courses'));
     }
@@ -43,8 +43,9 @@ class CourseController extends Controller
         $request->validate([
             'course_code' => 'required',
             'course_name' => 'required',
-            'description' => 'required',
-            'program' => 'required',
+            'year_level' => 'required',
+            'description',
+            'program_id' => 'required',
             'credits' => 'required',
         ]);
 
@@ -67,19 +68,22 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
-        return view('courses.edit', compact('course'));
+        $programs = Program::all(); // Retrieve all programs
+        return view('courses.edit', compact('course', 'programs'));
     }
 
     /**
      * Update the specified resource in storage.
      */
+    // In CourseController.php, update the update method:
     public function update(Request $request, Course $course)
     {
         $request->validate([
-            'course_code' => 'required|unique:courses,course_id',
+            'course_code' => 'required|unique:courses,course_code,' . $course->course_code . ',course_code',
             'course_name' => 'required',
-            'description' => 'required',
-            'program' => 'required',
+            'year_level' => 'required',
+            'description',
+            'program_id' => 'required',
             'credits' => 'required',
         ]);
 

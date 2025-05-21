@@ -29,6 +29,18 @@
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
+
+                <div class="mb-6">
+                    <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status <span class="text-red-600">*</span></label>
+                    <select name="status" id="status" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                        <option value="active" {{ old('status', $term->status) == 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="upcoming" {{ old('status', $term->status) == 'upcoming' ? 'selected' : '' }}>Upcoming</option>
+                        <option value="completed" {{ old('status', $term->status) == 'completed' ? 'selected' : '' }}>Completed</option>
+                    </select>
+                    @error('status')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
                 
                 <div class="mb-6">
                     <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date <span class="text-red-600">*</span></label>

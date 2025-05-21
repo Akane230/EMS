@@ -23,23 +23,77 @@ class Enrollment extends Model
         'year_level',
     ];
 
-    public function students(){
+    public function student()
+    {
         return $this->belongsTo(Student::class);
     }
 
-    public function terms(){
+    public function term()
+    {
         return $this->belongsTo(Term::class);
     }
 
-    public function courses(){
-        return $this->belongsTo(Course::class);
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'course_code', 'course_code');
     }
 
-    public function sections(){
+    public function section()
+    {
         return $this->belongsTo(Section::class);
     }
     
-    public function schedules(){
+    public function schedule()
+    {
         return $this->belongsTo(Schedule::class);
+    }
+
+    /**
+     * Get the program through the course relationship
+     */
+    public function program()
+    {
+        return $this->course->program();
+    }
+
+    public function getFormattedStartTimeAttribute(): string
+    {
+        if (!$this->starting_time) {
+            return 'N/A';
+        }
+
+        return date('h:i A', strtotime($this->starting_time));
+    }
+
+    /**
+     * Format the ending time
+     * 
+     * @return string
+     */
+    public function getFormattedEndTimeAttribute(): string
+    {
+        if (!$this->ending_time) {
+            return 'N/A';
+        }
+
+        return date('h:i A', strtotime($this->ending_time));
+    }
+
+    /**
+     * Get the formatted schedule display
+     * 
+     * @return string
+     */
+    public function getScheduleDisplayAttribute(): string
+    {
+        $day = $this->day ?: 'Unspecified Day';
+        $startTime = $this->formatted_start_time;
+        $endTime = $this->formatted_end_time;
+        $instructorName = $this->instructor ?
+            trim($this->instructor->last_name . ', ' . $this->instructor->first_name) :
+            'No Instructor';
+        $roomName = $this->room ? $this->room->name : 'No Room';
+
+        return "{$day}: {$startTime}-{$endTime} | {$instructorName} | {$roomName}";
     }
 }

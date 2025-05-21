@@ -58,7 +58,7 @@
                     <i class="fas fa-arrow-down"></i> 3%
                 </div>
             </div>
-            <div class="stat-value">1,248</div>
+            <div class="stat-value">{{ \App\Models\Enrollment::count() }}</div>
             <div class="stat-label">Active Enrollments</div>
         </div>
     </div>

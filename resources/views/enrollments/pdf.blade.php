@@ -149,12 +149,12 @@
                     <div class="student-info">{{ $enrollment->student->last_name ?? 'N/A' }}, {{ $enrollment->student->first_name ?? '' }}</div>
                     <div class="student-id">ID: {{ $enrollment->student->id ?? 'N/A' }}</div>
                 </td>
-                <td>{{ $enrollment->term->name ?? 'N/A' }}</td>
+                <td>{{ $enrollment->term->schoolyear_semester ?? 'N/A' }}</td>
                 <td>
                     <div>{{ $enrollment->course_code }}</div>
-                    <div class="student-id">{{ $enrollment->course->name ?? 'N/A' }}</div>
+                    <div class="student-id">{{ $enrollment->course->course_name ?? 'N/A' }}</div>
                 </td>
-                <td>{{ $enrollment->section->name ?? 'N/A' }}</td>
+                <td>{{ $enrollment->section->section_name ?? 'N/A' }}</td>
                 <td>
                     @if($enrollment->schedule)
                         {{ $enrollment->schedule->day ?? 'N/A' }}, 

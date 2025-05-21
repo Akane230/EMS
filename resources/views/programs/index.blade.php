@@ -61,7 +61,7 @@
                                 <div class="font-medium">{{ $program->program_name }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                {{ $program->department->name ?? 'N/A' }}
+                                {{ $program->department->department_name ?? 'N/A' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 {{ $program->created_at->format('M d, Y') }}

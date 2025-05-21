@@ -13,13 +13,13 @@
             <a href="{{ route('positions.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition">
                 <i class="fas fa-arrow-left mr-2"></i> Back to Positions
             </a>
-            <a href="{{ route('positions.edit', $position->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition">
+            <a href="{{ route('positions.edit', $position->id) }}" class="px-4 py-2 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-lg hover:bg-yellow-200 dark:hover:bg-yellow-800 transition">
                 <i class="fas fa-edit mr-2"></i> Edit
             </a>
             <form action="{{ route('positions.destroy', $position->id) }}" method="POST" class="inline">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition" onclick="return confirm('Are you sure you want to delete this position?')">
+                <button type="submit" class="px-4 py-2 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition" onclick="return confirm('Are you sure you want to delete this position?')">
                     <i class="fas fa-trash mr-2"></i> Delete
                 </button>
             </form>

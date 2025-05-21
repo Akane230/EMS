@@ -33,21 +33,21 @@
                 <div class="mb-6">
                     <label for="name" class="block text-sm font-medium mb-2">Name</label>
                     <input type="text" name="name" id="name" value="{{ old('name') }}" 
-                           class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" 
+                           class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" 
                            required>
                 </div>
 
                 <div class="mb-6">
                     <label for="email" class="block text-sm font-medium mb-2">Email</label>
                     <input type="email" name="email" id="email" value="{{ old('email') }}" 
-                           class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" 
+                           class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" 
                            required>
                 </div>
 
                 <div class="mb-6">
                     <label for="role" class="block text-sm font-medium mb-2">Role</label>
                     <select name="role" id="role" 
-                            class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" 
+                            class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" 
                             required>
                         <option value="" disabled {{ old('role') ? '' : 'selected' }}>Select a role</option>
                         <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
@@ -59,7 +59,7 @@
                 <div class="mb-6">
                     <label for="avatar" class="block text-sm font-medium mb-2">Avatar (Optional)</label>
                     <input type="file" name="avatar" id="avatar" 
-                           class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" 
+                           class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" 
                            accept="image/*">
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Max file size: 2MB. Accepted formats: JPG, PNG, GIF</p>
                 </div>
@@ -67,14 +67,14 @@
                 <div class="mb-6">
                     <label for="password" class="block text-sm font-medium mb-2">Password</label>
                     <input type="password" name="password" id="password" 
-                           class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" 
+                           class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" 
                            required>
                 </div>
 
                 <div class="mb-6">
                     <label for="password_confirmation" class="block text-sm font-medium mb-2">Confirm Password</label>
                     <input type="password" name="password_confirmation" id="password_confirmation" 
-                           class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500" 
+                           class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" 
                            required>
                 </div>
 

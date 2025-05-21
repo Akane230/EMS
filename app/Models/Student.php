@@ -10,22 +10,29 @@ class Student extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'id', 
-        'first_name', 
-        'last_name', 
+        'id',
+        'user_id',
+        'first_name',
+        'last_name',
         'email',
-        'gender', 
-        'date_of_birth', 
-        'country', 
-        'province', 
-        'city', 
-        'street', 
-        'zipcode', 
+        'gender',
+        'date_of_birth',
+        'country',
+        'province',
+        'city',
+        'street',
+        'zipcode',
         'status',
         'contact_number'
     ];
 
-    public function studentDetails(){
+    public function enrollments()
+    {
         return $this->hasMany(Enrollment::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

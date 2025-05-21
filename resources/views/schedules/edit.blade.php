@@ -40,7 +40,7 @@
                             <option value="">Select Course</option>
                             @foreach($courses as $course)
                             <option value="{{ $course->course_code }}" {{ old('course_code', $schedule->course_code) == $course->course_code ? 'selected' : '' }}>
-                                {{ $course->course_code }} - {{ $course->name }}
+                                {{ $course->course_code }} - {{ $course->course_name }}
                             </option>
                             @endforeach
                         </select>
@@ -52,7 +52,7 @@
                             <option value="">Select Section</option>
                             @foreach($sections as $section)
                             <option value="{{ $section->id }}" {{ old('section_id', $schedule->section_id) == $section->id ? 'selected' : '' }}>
-                                {{ $section->name }}
+                                {{ $section->section_name }}
                             </option>
                             @endforeach
                         </select>
@@ -76,7 +76,7 @@
                             <option value="">Select Room</option>
                             @foreach($rooms as $room)
                             <option value="{{ $room->id }}" {{ old('room_id', $schedule->room_id) == $room->id ? 'selected' : '' }}>
-                                {{ $room->name }}
+                                {{ $room->roomname }}
                             </option>
                             @endforeach
                         </select>

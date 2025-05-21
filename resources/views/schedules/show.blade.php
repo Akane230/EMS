@@ -13,7 +13,7 @@
             <div class="mb-6">
                 <div class="flex flex-wrap justify-between items-center mb-6">
                     <h2 class="text-xl font-semibold">
-                        <span class="me-2">{{ $schedule->course->name ?? 'N/A' }}</span>
+                        <span class="me-2">{{ $schedule->course->course_name ?? 'N/A' }}</span>
                         <span class="px-2 py-1 text-xs rounded-full 
                         @php
                         $dayColorClass = 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
@@ -47,13 +47,13 @@
                         </span>
                     </h2>
                     <div class="flex space-x-2">
-                        <a href="{{ route('schedules.edit', $schedule->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition">
+                        <a href="{{ route('schedules.edit', $schedule->id) }}" class="px-4 py-2 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-lg hover:bg-yellow-200 dark:hover:bg-yellow-800 transition">
                             <i class="fas fa-edit mr-2"></i> Edit
                         </a>
                         <form action="{{ route('schedules.destroy', $schedule->id) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition" onclick="return confirm('Are you sure you want to delete this schedule?')">
+                            <button type="submit" class="px-4 py-2 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-lg hover:bg-red-200 dark:hover:bg-red-800 transition" onclick="return confirm('Are you sure you want to delete this schedule?')">
                                 <i class="fas fa-trash mr-2"></i> Delete
                             </button>
                         </form>
@@ -70,11 +70,11 @@
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-500 dark:text-gray-400">Course Name:</span>
-                                <span class="font-medium">{{ $schedule->course->name ?? 'N/A' }}</span>
+                                <span class="font-medium">{{ $schedule->course->course_name ?? 'N/A' }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-500 dark:text-gray-400">Section:</span>
-                                <span class="font-medium">{{ $schedule->section->name ?? 'N/A' }}</span>
+                                <span class="font-medium">{{ $schedule->section->section_name ?? 'N/A' }}</span>
                             </div>
                         </div>
                     </div>
@@ -137,7 +137,7 @@
                         <div class="grid grid-cols-1 gap-2">
                             <div class="flex justify-between">
                                 <span class="text-gray-500 dark:text-gray-400">Room:</span>
-                                <span class="font-medium">{{ $schedule->room->name ?? 'N/A' }}</span>
+                                <span class="font-medium">{{ $schedule->room->roomname ?? 'N/A' }}</span>
                             </div>
                             @if(isset($schedule->room->capacity))
                             <div class="flex justify-between">

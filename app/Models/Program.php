@@ -17,15 +17,26 @@ class Program extends Model
         'department_id'
     ];
 
-    public function departments(){
+    public function department()
+    {
         return $this->belongsTo(Department::class);
     }
 
-    public function courses(){
+    public function courses()
+    {
         return $this->hasMany(Course::class);
     }
 
-    public function sections(){
+    public function sections()
+    {
         return $this->hasMany(Section::class);
+    }
+    public function isGeneralEducation(): bool
+    {
+        return $this->program_name === 'General Education';
+    }
+    public static function getGeneralEducationId()
+    {
+        return static::where('program_name', 'General Education')->value('id');
     }
 }

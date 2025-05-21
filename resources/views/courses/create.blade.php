@@ -49,6 +49,18 @@
                 </div>
 
                 <div class="mb-6">
+                    <label for="year_level" class="block text-sm font-medium mb-2">Year Level *</label>
+                    <select name="year_level" id="year_level" class="w-full py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500" required>
+                        <option value="">Select Year Level</option>
+                        @for ($i = 1; $i <= 5; $i++)
+                            <option value="{{ $i }}" {{ old('year_level') == $i ? 'selected' : '' }}>
+                            Year {{ $i }}
+                            </option>
+                            @endfor
+                    </select>
+                </div>
+
+                <div class="mb-6">
                     <label class="block text-sm font-medium mb-1">Program</label>
                     <select name="program_id"
                         class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
