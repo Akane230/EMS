@@ -30,13 +30,13 @@ class ScheduleController extends Controller
                         ->orWhere('last_name', 'like', "%{$search}%");
                   })
                   ->orWhereHas('section', function($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
+                      $q->where('section_name', 'like', "%{$search}%");
                   })
                   ->orWhereHas('room', function($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
+                      $q->where('roomname', 'like', "%{$search}%");
                   })
                   ->orWhereHas('course', function($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
+                      $q->where('course_name', 'like', "%{$search}%");
                   });
             });
         }

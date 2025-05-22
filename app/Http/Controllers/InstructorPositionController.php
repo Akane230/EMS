@@ -23,7 +23,7 @@ class InstructorPositionController extends Controller
             $query->whereHas('instructor', function($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%");
             })->orWhereHas('position', function($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%");
+                $q->where('position_name', 'like', "%{$search}%");
             });
         }
         

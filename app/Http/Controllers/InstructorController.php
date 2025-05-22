@@ -83,7 +83,6 @@ class InstructorController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:100',
             'last_name' => 'required|string|max:100',
-            'email' => 'required|email|unique:instructors,email,' . $instructor->id,
             'gender' => 'required|in:Male,Female,Other',
             'date_of_birth' => 'required|date',
             'contact_number' => 'nullable|string',

@@ -89,12 +89,25 @@ Route::middleware(['auth'])->group(function () {
 
     // Student Routes - Consolidated
     // Student Side Enrollment Routes
-    Route::prefix('student')->middleware(['auth', 'verified', 'role:student'])->group(function () {
+    // Replace the existing Student Routes section in web.php with this:
+
+    // Student Routes - Enhanced
+    Route::middleware('role:Student')->prefix('student')->group(function () {
+        // Dashboard
         Route::get('/dashboard', [StudentEnrollmentsController::class, 'dashboard'])->name('studentSide.dashboard');
+
+        // Enrollment Management
         Route::get('/enrollments', [StudentEnrollmentsController::class, 'index'])->name('studentSide.enrollment.index');
         Route::get('/enrollments/create', [StudentEnrollmentsController::class, 'create'])->name('studentSide.enrollment.create');
         Route::post('/enrollments', [StudentEnrollmentsController::class, 'store'])->name('studentSide.enrollment.store');
+
+        // Certificate of Registration (COR) Export
         Route::get('/enrollments/cor', [StudentEnrollmentsController::class, 'exportPdf'])->name('studentSide.enrollment.download.cor');
+
+        // AJAX routes for dynamic data loading
+        Route::get('/api/courses-by-program-year', [StudentEnrollmentsController::class, 'getCoursesByProgramAndYear']);
+        Route::get('/api/sections-by-program', [StudentEnrollmentsController::class, 'getSectionsByProgram']);
+        Route::get('/api/schedules-by-course', [StudentEnrollmentsController::class, 'getSchedulesByCourse']);
     });
 
     // Profile routes (for all authenticated users)

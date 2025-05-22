@@ -45,14 +45,14 @@ class DepartmentController extends Controller
 
         if ($validator->fails()) {
             return redirect()->route('departments.create')
-                        ->withErrors($validator)
-                        ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
 
         Department::create($request->all());
 
         return redirect()->route('departments.index')
-                        ->with('success', 'Department created successfully.');
+            ->with('success', 'Department created successfully.');
     }
 
     /**
@@ -83,14 +83,14 @@ class DepartmentController extends Controller
 
         if ($validator->fails()) {
             return redirect()->route('departments.edit', $department)
-                        ->withErrors($validator)
-                        ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
 
         $department->update($request->all());
 
         return redirect()->route('departments.index')
-                        ->with('success', 'Department updated successfully.');
+            ->with('success', 'Department updated successfully.');
     }
 
     /**
@@ -101,7 +101,7 @@ class DepartmentController extends Controller
         $department->delete();
 
         return redirect()->route('departments.index')
-                        ->with('success', 'Department deleted successfully.');
+            ->with('success', 'Department deleted successfully.');
     }
 
     public function exportPdf()

@@ -1510,6 +1510,10 @@ a{
     color: #c6f6d5;
 }
 
+.black-text{
+    color: black;
+}
+
 /* Ensure dropdown options are visible in both light and dark mode */
 /* .nav-link.logout {
     color: var(--danger);

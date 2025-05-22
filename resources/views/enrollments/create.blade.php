@@ -27,7 +27,7 @@
             </div>
             @endif
 
-            <form action="{{ route('enrollments.store.bulk') }}" method="POST" id="bulkEnrollmentForm">
+            <form action="{{ route('enrollments.store') }}" method="POST" id="bulkEnrollmentForm">
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -223,10 +223,10 @@
                         </tbody>
                     </table>
                     <div class="mt-4 flex items-center">
-                        <button type="button" id="selectAllBtn" class="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 mr-2">
+                        <button type="button" id="selectAllBtn" class="black-text px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 mr-2">
                             Select All
                         </button>
-                        <button type="button" id="clearAllBtn" class="px-3 py-1 bg-gray-600 text-white text-xs rounded hover:bg-gray-700">
+                        <button type="button" id="clearAllBtn" class="black-text px-3 py-1 bg-gray-600 text-white text-xs rounded hover:bg-gray-700">
                             Clear All
                         </button>
                     </div>
