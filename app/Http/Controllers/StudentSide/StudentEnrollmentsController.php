@@ -56,7 +56,7 @@ class StudentEnrollmentsController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
-        $currentYearLevel = $latestEnrollment ? $latestEnrollment->year_level : 1;
+        $currentYearLevel = $latestEnrollment ? $this->calculateCurrentYearLevel($student->id) : 1;
         $currentProgram = $latestEnrollment ? $this->getStudentProgram($student->id) : null;
 
         return view('studentSide.dashboard', compact(
@@ -145,22 +145,15 @@ class StudentEnrollmentsController extends Controller
             $programs = Program::where('program_name', '!=', 'General Education')
                 ->orderBy('program_name')->get();
         } else {
-            // Get student's program and calculate year level based on latest enrollment
-            $latestEnrollment = Enrollment::with(['term', 'course.program'])
-                ->where('student_id', $student->id)
-                ->orderBy('created_at', 'desc')
-                ->first();
-
-            if ($latestEnrollment) {
-                $program = $this->getStudentProgram($student->id);
-                $yearLevel = $this->calculateYearLevel($latestEnrollment, $currentTerm);
-                
-                // Get sections for the student's program
-                if ($program) {
-                    $sections = Section::where('program_id', $program->id)
-                        ->orderBy('section_name')
-                        ->get();
-                }
+            // Get student's program and calculate current year level
+            $program = $this->getStudentProgram($student->id);
+            $yearLevel = $this->calculateCurrentYearLevel($student->id);
+            
+            // Get sections for the student's program
+            if ($program) {
+                $sections = Section::where('program_id', $program->id)
+                    ->orderBy('section_name')
+                    ->get();
             }
         }
 
@@ -428,40 +421,105 @@ class StudentEnrollmentsController extends Controller
     }
 
     /**
-     * Calculate year level based on previous enrollment and current term
+     * Calculate current year level for a student based on all their completed terms
+     */
+    private function calculateCurrentYearLevel($studentId)
+    {
+        // Get the student's first enrollment (their starting point)
+        $firstEnrollment = Enrollment::with('term')
+            ->where('student_id', $studentId)
+            ->orderBy('created_at', 'asc')
+            ->first();
+
+        if (!$firstEnrollment) {
+            return 1; // Default to 1st year if no enrollments
+        }
+
+        // Get all unique terms the student has been enrolled in, ordered chronologically
+        $enrolledTerms = Enrollment::with('term')
+            ->where('student_id', $studentId)
+            ->select('term_id')
+            ->distinct()
+            ->get()
+            ->pluck('term')
+            ->sortBy(function ($term) {
+                // Sort by school year first, then by semester
+                preg_match('/(\d{4}-\d{4})\s+(\d+)(st|nd|rd|th)\s+Semester/', $term->schoolyear_semester, $matches);
+                if (!empty($matches)) {
+                    $schoolYear = $matches[1];
+                    $semester = (int)$matches[2];
+                    return $schoolYear . '_' . str_pad($semester, 2, '0', STR_PAD_LEFT);
+                }
+                return $term->schoolyear_semester;
+            });
+
+        // Get the first term info
+        $firstTerm = $enrolledTerms->first();
+        $firstYearLevel = $firstEnrollment->year_level;
+
+        // Get current active term
+        $currentTerm = Term::where('status', 'active')->first();
+        if (!$currentTerm) {
+            // If no active term, return the year level from the latest enrollment
+            $latestEnrollment = Enrollment::where('student_id', $studentId)
+                ->orderBy('created_at', 'desc')
+                ->first();
+            return $latestEnrollment ? $latestEnrollment->year_level : $firstYearLevel;
+        }
+
+        // Calculate year level progression based on unique school years completed
+        $completedSchoolYears = $this->getCompletedSchoolYears($enrolledTerms);
+        $currentSchoolYear = $this->parseSchoolYear($currentTerm->schoolyear_semester);
+        $firstSchoolYear = $this->parseSchoolYear($firstTerm->schoolyear_semester);
+
+        // Count how many full school years have passed since the first enrollment
+        $yearsPassed = 0;
+        if ($currentSchoolYear && $firstSchoolYear) {
+            $firstYear = (int)substr($firstSchoolYear, 0, 4);
+            $currentYear = (int)substr($currentSchoolYear, 0, 4);
+            $yearsPassed = $currentYear - $firstYear;
+        }
+
+        // Calculate the new year level
+        $newYearLevel = $firstYearLevel + $yearsPassed;
+        
+        // Cap at 5th year
+        return min($newYearLevel, 5);
+    }
+
+    /**
+     * Get completed school years from enrolled terms
+     */
+    private function getCompletedSchoolYears($enrolledTerms)
+    {
+        $schoolYears = [];
+        
+        foreach ($enrolledTerms as $term) {
+            $schoolYear = $this->parseSchoolYear($term->schoolyear_semester);
+            if ($schoolYear && !in_array($schoolYear, $schoolYears)) {
+                $schoolYears[] = $schoolYear;
+            }
+        }
+        
+        return $schoolYears;
+    }
+
+    /**
+     * Parse school year from term string
+     */
+    private function parseSchoolYear($termString)
+    {
+        preg_match('/(\d{4}-\d{4})/', $termString, $matches);
+        return !empty($matches) ? $matches[1] : null;
+    }
+
+    /**
+     * Calculate year level based on previous enrollment and current term (legacy method - kept for compatibility)
      */
     private function calculateYearLevel($latestEnrollment, $currentTerm)
     {
-        $previousTerm = $latestEnrollment->term;
-        $previousYearLevel = $latestEnrollment->year_level;
-
-        // Extract school year and semester from term names
-        // Assuming format: "2025-2026 1st Semester" or "2025-2026 2nd Semester"
-        preg_match('/(\d{4}-\d{4})\s+(\d+)(st|nd|rd|th)\s+Semester/', $previousTerm->schoolyear_semester, $prevMatches);
-        preg_match('/(\d{4}-\d{4})\s+(\d+)(st|nd|rd|th)\s+Semester/', $currentTerm->schoolyear_semester, $currMatches);
-
-        if (empty($prevMatches) || empty($currMatches)) {
-            // If we can't parse the format, default to same year level
-            return $previousYearLevel;
-        }
-
-        $prevSchoolYear = $prevMatches[1];
-        $prevSemester = (int)$prevMatches[2];
-        $currSchoolYear = $currMatches[1];
-        $currSemester = (int)$currMatches[2];
-
-        // If it's a new school year, increment year level
-        if ($currSchoolYear > $prevSchoolYear) {
-            return min($previousYearLevel + 1, 5); // Cap at 5th year
-        }
-
-        // If same school year but moved from 2nd semester to 1st semester (new academic year)
-        if ($currSchoolYear === $prevSchoolYear && $prevSemester === 2 && $currSemester === 1) {
-            return min($previousYearLevel + 1, 5);
-        }
-
-        // Otherwise, stay at same year level
-        return $previousYearLevel;
+        // Use the new calculation method instead
+        return $this->calculateCurrentYearLevel($latestEnrollment->student_id);
     }
 
     /**
