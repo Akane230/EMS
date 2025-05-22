@@ -107,6 +107,7 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($enrollment->schedule)
                                     {{ $enrollment->schedule->day ?? 'N/A' }}, 
+                                    {{ $enrollment->schedule->instructor->first_name ?? 'N/A' }} {{ $enrollment->schedule->instructor->last_name ?? 'N/A' }}, 
                                     {{ \Carbon\Carbon::parse($enrollment->schedule->starting_time ?? '')->format('h:i A') }} - 
                                     {{ \Carbon\Carbon::parse($enrollment->schedule->ending_time ?? '')->format('h:i A') }}
                                 @else

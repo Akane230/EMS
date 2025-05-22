@@ -12,7 +12,6 @@ class Student extends Model
     protected $fillable = [
         'user_id',
         'first_name',
-        'middle_name',
         'last_name',
         'gender',
         'date_of_birth',
@@ -22,7 +21,7 @@ class Student extends Model
         'street',
         'zipcode',
         'contact_number',
-        'email_address',
+        'email',
         'status'
     ];
 

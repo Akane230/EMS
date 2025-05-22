@@ -57,7 +57,7 @@ class StudentEnrollmentsController extends Controller
             ->first();
 
         $currentYearLevel = $latestEnrollment ? $latestEnrollment->year_level : 1;
-        $currentProgram = $latestEnrollment ? $latestEnrollment->course->program : null;
+        $currentProgram = $latestEnrollment ? $this->getStudentProgram($student->id) : null;
 
         return view('studentSide.dashboard', compact(
             'student',
@@ -142,7 +142,8 @@ class StudentEnrollmentsController extends Controller
 
         if ($isFreshman) {
             // Freshman can select any program
-            $programs = Program::orderBy('program_name')->get();
+            $programs = Program::where('program_name', '!=', 'General Education')
+                ->orderBy('program_name')->get();
         } else {
             // Get student's program and calculate year level based on latest enrollment
             $latestEnrollment = Enrollment::with(['term', 'course.program'])
@@ -151,13 +152,15 @@ class StudentEnrollmentsController extends Controller
                 ->first();
 
             if ($latestEnrollment) {
-                $program = $latestEnrollment->course->program;
+                $program = $this->getStudentProgram($student->id);
                 $yearLevel = $this->calculateYearLevel($latestEnrollment, $currentTerm);
                 
                 // Get sections for the student's program
-                $sections = Section::where('program_id', $program->id)
-                    ->orderBy('section_name')
-                    ->get();
+                if ($program) {
+                    $sections = Section::where('program_id', $program->id)
+                        ->orderBy('section_name')
+                        ->get();
+                }
             }
         }
 
@@ -223,11 +226,8 @@ class StudentEnrollmentsController extends Controller
         // Validate courses belong to the correct program and year level
         $programId = $isFreshman ? $request->program_id : null;
         if (!$isFreshman) {
-            $latestEnrollment = Enrollment::with('course.program')
-                ->where('student_id', $student->id)
-                ->orderBy('created_at', 'desc')
-                ->first();
-            $programId = $latestEnrollment->course->program->id;
+            $program = $this->getStudentProgram($student->id);
+            $programId = $program ? $program->id : null;
         }
 
         // Get valid courses for the program and year level
@@ -309,7 +309,7 @@ class StudentEnrollmentsController extends Controller
         }
 
         $totalUnits = $enrollments->sum('course.credits');
-        $program = $enrollments->first()->course->program;
+        $program = $this->getStudentProgram($student->id);
 
         $pdf = PDF::loadView('studentSide.enrollments.cor-pdf', [
             'student' => $student,
@@ -334,7 +334,7 @@ class StudentEnrollmentsController extends Controller
         $genEdProgramId = Program::where('program_name', 'General Education')->value('id');
 
         // Build query for courses
-        $query = Course::where('year_level', $yearLevel);
+        $query = Course::with('program')->where('year_level', $yearLevel);
         
         if ($genEdProgramId) {
             $query->where(function ($q) use ($programId, $genEdProgramId) {
@@ -365,31 +365,66 @@ class StudentEnrollmentsController extends Controller
     }
 
     /**
-     * Get schedules by course code for AJAX
+     * Get schedules by course code for AJAX - Updated to filter by program and section
      */
     public function getSchedulesByCourse(Request $request)
     {
         $courseCode = $request->course_code;
         $sectionId = $request->section_id;
+        $programId = $request->program_id;
 
-        $query = Schedule::with(['room', 'instructor'])
+        // Start with base query
+        $query = Schedule::with(['room', 'instructor', 'course', 'section'])
             ->where('course_code', $courseCode);
 
+        // If section is provided, filter by section
         if ($sectionId) {
-            // Try to find schedules for specific section first
-            $specificSchedules = clone $query;
-            $specificSchedules->where('section_id', $sectionId);
-            $schedules = $specificSchedules->get();
+            $query->where('section_id', $sectionId);
+        }
 
-            // If no schedules found for specific section, get all schedules for the course
-            if ($schedules->isEmpty()) {
-                $schedules = $query->get();
-            }
-        } else {
-            $schedules = $query->get();
+        // If program is provided, ensure the schedule's section belongs to the program
+        if ($programId) {
+            $query->whereHas('section', function ($q) use ($programId) {
+                $q->where('program_id', $programId);
+            });
+        }
+
+        $schedules = $query->orderBy('day')
+            ->orderBy('starting_time')
+            ->get();
+
+        // If no schedules found with specific section, try to find schedules 
+        // for the same course but different sections within the same program
+        if ($schedules->isEmpty() && $sectionId && $programId) {
+            $fallbackQuery = Schedule::with(['room', 'instructor', 'course', 'section'])
+                ->where('course_code', $courseCode)
+                ->whereHas('section', function ($q) use ($programId) {
+                    $q->where('program_id', $programId);
+                });
+
+            $schedules = $fallbackQuery->orderBy('day')
+                ->orderBy('starting_time')
+                ->get();
         }
 
         return response()->json($schedules);
+    }
+
+    /**
+     * Get student's primary program (excluding General Education)
+     */
+    private function getStudentProgram($studentId)
+    {
+        // Get the most recent enrollment that's NOT General Education
+        $enrollment = Enrollment::with('course.program')
+            ->where('student_id', $studentId)
+            ->whereHas('course.program', function ($query) {
+                $query->where('program_name', '!=', 'General Education');
+            })
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        return $enrollment ? $enrollment->course->program : null;
     }
 
     /**

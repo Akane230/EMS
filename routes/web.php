@@ -105,9 +105,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/enrollments/cor', [StudentEnrollmentsController::class, 'exportPdf'])->name('studentSide.enrollment.download.cor');
 
         // AJAX routes for dynamic data loading
-        Route::get('/api/courses-by-program-year', [StudentEnrollmentsController::class, 'getCoursesByProgramAndYear']);
-        Route::get('/api/sections-by-program', [StudentEnrollmentsController::class, 'getSectionsByProgram']);
-        Route::get('/api/schedules-by-course', [StudentEnrollmentsController::class, 'getSchedulesByCourse']);
+        Route::get('/studentSide/enrollment/courses', [StudentEnrollmentsController::class, 'getCoursesByProgramAndYear'])->name('studentSide.enrollment.courses');
+        Route::get('/studentSide/enrollment/sections', [StudentEnrollmentsController::class, 'getSectionsByProgram'])->name('studentSide.enrollment.sections');
+        Route::get('/studentSide/enrollment/schedules', [StudentEnrollmentsController::class, 'getSchedulesByCourse'])->name('studentSide.enrollment.schedules');
     });
 
     // Profile routes (for all authenticated users)
