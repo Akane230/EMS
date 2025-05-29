@@ -115,4 +115,17 @@ class CourseController extends Controller
 
         return $pdf->download('course_records_' . now()->format('Y-m-d') . '.pdf');
     }
+
+    /**
+     * Export individual course to PDF
+     */
+    public function exportIndividualPdf(Course $course)
+    {
+        $pdf = PDF::loadView('courses.individual-pdf', [
+            'course' => $course,
+            'title' => 'Course Record'
+        ]);
+
+        return $pdf->download('course_record_' . $course->course_code . '_' . now()->format('Y-m-d') . '.pdf');
+    }
 }

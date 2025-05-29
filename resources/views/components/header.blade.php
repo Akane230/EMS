@@ -1,5 +1,7 @@
 <header class="top-bar">
-    <button class="menu-toggle" @click="$store.layout.toggleSidebar()">
+    <button class="menu-toggle"
+        @click="$store.layout.toggleSidebar()"
+        type="button">
         <i class="fas fa-bars"></i>
     </button>
 

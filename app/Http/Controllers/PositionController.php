@@ -15,18 +15,18 @@ class PositionController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
-        
+
         $positions = Position::with('department') // Eager load department
-            ->when($search, function($query, $search) {
+            ->when($search, function ($query, $search) {
                 return $query->where('position_name', 'like', "%{$search}%")
-                    ->orWhereHas('department', function($q) use ($search) {
+                    ->orWhereHas('department', function ($q) use ($search) {
                         $q->where('department_name', 'like', "%{$search}%");
                     });
             })
             ->latest()
             ->orderBy('position_name')
             ->paginate(10);
-        
+
         return view('positions.index', compact('positions'));
     }
 
@@ -105,7 +105,7 @@ class PositionController extends Controller
         return redirect()->route('positions.index')
             ->with('success', 'Position deleted successfully.');
     }
-    
+
     /**
      * Export positions as PDF.
      */
@@ -121,5 +121,20 @@ class PositionController extends Controller
         ]);
 
         return $pdf->download('position_records_' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Export individual position to PDF
+     */
+    public function exportIndividualPdf(Position $position)
+    {
+        $position->load('department');
+
+        $pdf = PDF::loadView('positions.individual-pdf', [
+            'position' => $position,
+            'title' => 'Position Record'
+        ]);
+
+        return $pdf->download('position_record_' . $position->id . '_' . now()->format('Y-m-d') . '.pdf');
     }
 }

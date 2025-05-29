@@ -114,9 +114,9 @@
             <div class="chart-header">
                 <h3 class="chart-title">Student Enrollment Trend</h3>
                 <div class="chart-actions">
-                    <button class="chart-action active">Monthly</button>
-                    <button class="chart-action">Quarterly</button>
-                    <button class="chart-action">Yearly</button>
+                    <button class="chart-action active" data-period="monthly">Monthly</button>
+                    <button class="chart-action" data-period="quarterly">Quarterly</button>
+                    <button class="chart-action" data-period="yearly">Yearly</button>
                 </div>
             </div>
             <div class="chart-container">
@@ -126,7 +126,7 @@
 
         <div class="chart-card">
             <div class="chart-header">
-                <h3 class="chart-title">Course Distribution</h3>
+                <h3 class="chart-title">Course Distribution by Program</h3>
             </div>
             <div class="chart-container">
                 <canvas id="courseChart"></canvas>
@@ -136,21 +136,52 @@
 
     <x-slot name="scripts">
         <script>
+            // Get real data from Laravel
+            const enrollmentData = @json($enrollmentData);
+            const courseDistribution = @json($courseDistribution);
+
+            let enrollmentChart, courseChart;
+
             // Initialize charts
             document.addEventListener('DOMContentLoaded', function() {
-                // Enrollment Chart
-                const enrollmentCtx = document.getElementById('enrollmentChart').getContext('2d');
-                const enrollmentChart = new Chart(enrollmentCtx, {
+                initializeEnrollmentChart('monthly');
+                initializeCourseChart();
+                
+                // Handle period change buttons
+                document.querySelectorAll('.chart-action').forEach(button => {
+                    button.addEventListener('click', function() {
+                        // Update active button
+                        document.querySelectorAll('.chart-action').forEach(btn => {
+                            btn.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                        
+                        // Update chart
+                        const period = this.getAttribute('data-period');
+                        updateEnrollmentChart(period);
+                    });
+                });
+            });
+
+            function initializeEnrollmentChart(period) {
+                const ctx = document.getElementById('enrollmentChart').getContext('2d');
+                const data = getEnrollmentDataByPeriod(period);
+                
+                enrollmentChart = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        labels: data.labels,
                         datasets: [{
                             label: 'New Enrollments',
-                            data: [12, 19, 15, 22, 18, 24, 17, 21, 30, 26, 20, 28],
+                            data: data.values,
                             borderColor: '#4f46e5',
                             backgroundColor: 'rgba(79, 70, 229, 0.1)',
                             tension: 0.4,
-                            fill: true
+                            fill: true,
+                            pointBackgroundColor: '#4f46e5',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4
                         }]
                     },
                     options: {
@@ -159,32 +190,82 @@
                         plugins: {
                             legend: {
                                 display: false
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
                             }
                         },
                         scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'Period'
+                                }
+                            },
                             y: {
-                                beginAtZero: true
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Enrollments'
+                                },
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
                             }
+                        },
+                        interaction: {
+                            mode: 'nearest',
+                            axis: 'x',
+                            intersect: false
                         }
                     }
                 });
+            }
 
-                // Course Distribution Chart
-                const courseCtx = document.getElementById('courseChart').getContext('2d');
-                const courseChart = new Chart(courseCtx, {
+            function updateEnrollmentChart(period) {
+                const data = getEnrollmentDataByPeriod(period);
+                enrollmentChart.data.labels = data.labels;
+                enrollmentChart.data.datasets[0].data = data.values;
+                enrollmentChart.update();
+            }
+
+            function getEnrollmentDataByPeriod(period) {
+                if (period === 'yearly') {
+                    return enrollmentData.yearly;
+                } else if (period === 'quarterly') {
+                    return enrollmentData.quarterly;
+                } else {
+                    return enrollmentData.monthly;
+                }
+            }
+
+            function initializeCourseChart() {
+                const ctx = document.getElementById('courseChart').getContext('2d');
+                
+                courseChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: ['Science', 'Arts', 'Business', 'Technology', 'Health'],
+                        labels: courseDistribution.labels,
                         datasets: [{
-                            data: [35, 25, 20, 15, 5],
+                            data: courseDistribution.values,
                             backgroundColor: [
-                                '#4f46e5',
-                                '#10b981',
-                                '#0ea5e9',
-                                '#f59e0b',
-                                '#ef4444'
+                                '#4f46e5', // Purple
+                                '#10b981', // Green
+                                '#0ea5e9', // Blue
+                                '#f59e0b', // Yellow
+                                '#ef4444', // Red
+                                '#8b5cf6', // Violet
+                                '#06b6d4', // Cyan
+                                '#84cc16', // Lime
+                                '#f97316', // Orange
+                                '#ec4899'  // Pink
                             ],
-                            borderWidth: 0
+                            borderWidth: 0,
+                            hoverBorderWidth: 2,
+                            hoverBorderColor: '#fff'
                         }]
                     },
                     options: {
@@ -192,13 +273,35 @@
                         maintainAspectRatio: false,
                         plugins: {
                             legend: {
-                                position: 'right'
+                                position: 'right',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 15,
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                        return `${label}: ${value} courses (${percentage}%)`;
+                                    }
+                                }
                             }
                         },
-                        cutout: '70%'
+                        cutout: '60%',
+                        animation: {
+                            animateRotate: true,
+                            animateScale: false
+                        }
                     }
                 });
-            });
+            }
         </script>
     </x-slot>
 </x-app-layout>

@@ -17,6 +17,8 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StudentSide\StudentEnrollmentsController;
+use App\Http\Controllers\StudentSide\StudentProfileController;
+use App\Http\Controllers\Instructor\InstructorDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -38,17 +40,17 @@ Route::get('/check-auth', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard-redirect', function () {
-        if (Auth::user()->role === 'Admin') {
+        $user = Auth::user();
+        if ($user->role === 'Admin') {
             return redirect()->route('admin.dashboard');
+        } elseif ($user->role === 'Instructor') {
+            return redirect()->route('instructor.dashboard');
         }
         return redirect()->route('studentSide.dashboard');
     })->name('dashboard');
 
     Route::middleware('role:Admin')->group(function () {
-        Route::get('/admin/dashboard', function () {
-            return view('dashboard');
-        })->name('admin.dashboard');
-
+        Route::get('admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
         Route::resource('students', StudentController::class);
         Route::resource('courses', CourseController::class);
         Route::resource('instructors', InstructorController::class);
@@ -76,6 +78,19 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/schedules/export/pdf', [ScheduleController::class, 'exportPdf'])->name('schedules.export.pdf');
         Route::get('/users/export/pdf', [UserController::class, 'exportPdf'])->name('users.export.pdf');
 
+        Route::get('/students/{student}/export-pdf', [StudentController::class, 'exportIndividualPdf'])->name('students.export.individual.pdf');
+        Route::get('/courses/{course}/export-pdf', [CourseController::class, 'exportIndividualPdf'])->name('courses.export.individual.pdf');
+        Route::get('/departments/{department}/export-pdf', [DepartmentController::class, 'exportIndividualPdf'])->name('departments.export.individual.pdf');
+        Route::get('/instructors/{instructor}/export-pdf', [InstructorController::class, 'exportIndividualPdf'])->name('instructors.export.individual.pdf');
+        Route::get('/enrollments/{enrollment}/export-pdf', [EnrollmentsController::class, 'exportIndividualPdf'])->name('enrollments.export.individual.pdf');
+        Route::get('/instructor-positions/{instructorPosition}/export-pdf', [InstructorPositionController::class, 'exportIndividualPdf'])->name('instructor-positions.export.individual.pdf');
+        Route::get('/positions/{position}/export-pdf', [PositionController::class, 'exportIndividualPdf'])->name('positions.export.individual.pdf');
+        Route::get('/programs/{program}/export-pdf', [ProgramController::class, 'exportIndividualPdf'])->name('programs.export.individual.pdf');
+        Route::get('/rooms/{room}/export-pdf', [RoomController::class, 'exportIndividualPdf'])->name('rooms.export.individual.pdf');
+        Route::get('/sections/{section}/export-pdf', [SectionController::class, 'exportIndividualPdf'])->name('sections.export.individual.pdf');
+        Route::get('/schedules/{schedule}/export-pdf', [ScheduleController::class, 'exportIndividualPdf'])->name('schedules.export.individual.pdf');
+        Route::get('/terms/{term}/export-pdf', [TermController::class, 'exportIndividualPdf'])->name('terms.export.individual.pdf');
+
         Route::get('/enrollments/create/bulk', [EnrollmentsController::class, 'createBulk'])->name('enrollments.create.bulk');
         Route::post('/enrollments/store/bulk', [EnrollmentsController::class, 'storeBulk'])->name('enrollments.store.bulk');
 
@@ -83,6 +98,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/api/admin/courses-by-program', [EnrollmentsController::class, 'getCoursesByProgram']);
         Route::get('/api/admin/sections-by-program', [EnrollmentsController::class, 'getSectionsByProgram']);
         Route::get('/api/admin/schedules-by-course-section', [EnrollmentsController::class, 'getSchedulesByCourseAndSection']);
+
+        Route::get('/api/dashboard/stats', [DashboardController::class, 'getStats'])->name('dashboard.stats');
+        Route::get('/api/dashboard/enrollment-trend', [DashboardController::class, 'getEnrollmentTrend'])->name('dashboard.enrollment-trend');
+        Route::get('/api/dashboard/metrics', [DashboardController::class, 'getMetrics'])->name('dashboard.metrics');
 
         Route::get('/enrollment-stats', [DashboardController::class, 'getStats']);
     });
@@ -108,7 +127,36 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/studentSide/enrollment/courses', [StudentEnrollmentsController::class, 'getCoursesByProgramAndYear'])->name('studentSide.enrollment.courses');
         Route::get('/studentSide/enrollment/sections', [StudentEnrollmentsController::class, 'getSectionsByProgram'])->name('studentSide.enrollment.sections');
         Route::get('/studentSide/enrollment/schedules', [StudentEnrollmentsController::class, 'getSchedulesByCourse'])->name('studentSide.enrollment.schedules');
+
+        // Student Profile
+        Route::get('/profile', [StudentProfileController::class, 'edit'])->name('studentSide.profile.edit');
+        Route::get('/profile/edit', [StudentProfileController::class, 'show'])->name('studentSide.profile.show');
+        Route::put('/profile', [StudentProfileController::class, 'update'])->name('studentSide.profile.update');
+        Route::delete('/profile', [StudentProfileController::class, 'destroy'])->name('studentSide.profile.destroy');
     });
+
+    // Add these routes inside the existing instructor middleware group in web.php
+
+    Route::middleware('role:Instructor')->prefix('instructor')->group(function () {
+        // Dashboard
+        Route::get('/dashboard', [InstructorDashboardController::class, 'index'])->name('instructor.dashboard');
+
+        // Students Management
+        Route::get('/students', [InstructorDashboardController::class, 'allStudents'])->name('instructor.students.index');
+        Route::get('/sections/{section}/students', [InstructorDashboardController::class, 'sectionStudents'])->name('instructor.section.students');
+
+        // PDF Exports
+        Route::get('/students/{student}/cor', [InstructorDashboardController::class, 'exportStudentCOR'])->name('instructor.student.cor');
+        Route::get('/sections/{section}/students/pdf', [InstructorDashboardController::class, 'exportSectionStudentsPdf'])->name('instructor.section.students.pdf');
+        Route::get('/students/pdf', [InstructorDashboardController::class, 'exportAllStudentsPdf'])->name('instructor.students.pdf');
+        Route::get('/schedule/pdf', [InstructorDashboardController::class, 'exportSchedulePdf'])->name('instructor.schedule.pdf');
+
+        // Stats API
+        Route::get('/stats', [InstructorDashboardController::class, 'getStats'])->name('instructor.stat');
+    });
+
+    // Don't forget to add the import at the top of web.php:
+    // use App\Http\Controllers\Instructor\InstructorDashboardController;
 
     // Profile routes (for all authenticated users)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

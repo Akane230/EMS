@@ -16,18 +16,18 @@ class SectionController extends Controller
     public function index(Request $request)
     {
         $query = Section::with('program');
-        
+
         // Handle search
         if ($request->has('search')) {
             $search = $request->search;
             $query->where('section_name', 'like', "%{$search}%")
-                  ->orWhereHas('program', function($q) use ($search) {
-                      $q->where('program_name', 'like', "%{$search}%");
-                  });
+                ->orWhereHas('program', function ($q) use ($search) {
+                    $q->where('program_name', 'like', "%{$search}%");
+                });
         }
-        
+
         $sections = $query->latest()->paginate(10);
-        
+
         return view('sections.index', compact('sections'));
     }
 
@@ -114,11 +114,11 @@ class SectionController extends Controller
     public function destroy(Section $section)
     {
         $section->delete();
-        
+
         return redirect()->route('sections.index')
             ->with('success', 'Section deleted successfully.');
     }
-    
+
     /**
      * Export sections to PDF.
      */
@@ -170,5 +170,20 @@ class SectionController extends Controller
             ]);
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * Export individual section to PDF
+     */
+    public function exportIndividualPdf(Section $section)
+    {
+        $section->load('program');
+
+        $pdf = PDF::loadView('sections.individual-pdf', [
+            'section' => $section,
+            'title' => 'Section Record'
+        ]);
+
+        return $pdf->download('section_record_' . $section->id . '_' . now()->format('Y-m-d') . '.pdf');
     }
 }

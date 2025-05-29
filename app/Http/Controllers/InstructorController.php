@@ -126,4 +126,17 @@ class InstructorController extends Controller
 
         return $pdf->download('instructor_records_' . now()->format('Y-m-d') . '.pdf');
     }
+
+    /**
+     * Export individual instructor to PDF
+     */
+    public function exportIndividualPdf(Instructor $instructor)
+    {
+        $pdf = PDF::loadView('instructors.individual-pdf', [
+            'instructor' => $instructor,
+            'title' => 'Instructor Record'
+        ]);
+
+        return $pdf->download('instructor_record_' . $instructor->id . '_' . now()->format('Y-m-d') . '.pdf');
+    }
 }

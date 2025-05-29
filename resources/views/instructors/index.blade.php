@@ -21,7 +21,7 @@
         <a href="{{ route('instructors.export.pdf') }}" class="px-4 py-2 bg-green-600 text-black rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition">
             <i class="fas fa-file-pdf mr-2"></i> Export PDF
         </a>
-        
+
     </div>
 
     <div class="max-w-7xl mx-auto">
@@ -50,6 +50,7 @@
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">User ID</th>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Name</th>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Gender</th>
@@ -61,6 +62,7 @@
                         @forelse ($instructors as $instructor)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                             <td class="px-6 py-4 whitespace-nowrap">{{ $instructor->id }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $instructor->user_id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="font-medium">{{ $instructor->first_name }} {{ $instructor->last_name }}</div>
                                 <div class="text-sm text-gray-500 dark:text-gray-400">
@@ -88,6 +90,9 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">
+                                    <a href="{{ route('instructors.export.individual.pdf', $instructor->id) }}" class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200" title="Export PDF">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
                                     <a href="{{ route('instructors.show', $instructor->id) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">
                                         <i class="fas fa-eye"></i>
                                     </a>

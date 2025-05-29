@@ -63,6 +63,9 @@
                             <td class="px-6 py-4 whitespace-nowrap">{{ $position->created_at->format('M d, Y') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">
+                                    <a href="{{ route('positions.export.individual.pdf', $position->id) }}" class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200" title="Export PDF">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
                                     <a href="{{ route('positions.show', $position->id) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">
                                         <i class="fas fa-eye"></i>
                                     </a>

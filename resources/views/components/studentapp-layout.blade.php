@@ -31,6 +31,24 @@
     </div>
 
     {{ $scripts ?? '' }}
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('layout', {
+                darkMode: localStorage.getItem('darkMode') === 'true' || false,
+                sidebarOpen: window.innerWidth >= 992,
+
+                toggleSidebar() {
+                    this.sidebarOpen = !this.sidebarOpen;
+                },
+
+                toggleDarkMode() {
+                    this.darkMode = !this.darkMode;
+                    localStorage.setItem('darkMode', this.darkMode.toString());
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

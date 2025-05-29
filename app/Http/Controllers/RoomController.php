@@ -15,18 +15,18 @@ class RoomController extends Controller
     public function index(Request $request)
     {
         $query = Room::query()->with('department');
-        
+
         // Search functionality
         if ($request->has('search')) {
             $search = $request->search;
             $query->where('roomname', 'like', "%{$search}%")
-                  ->orWhereHas('department', function($q) use ($search) {
-                      $q->where('roomname', 'like', "%{$search}%");
-                  });
+                ->orWhereHas('department', function ($q) use ($search) {
+                    $q->where('roomname', 'like', "%{$search}%");
+                });
         }
-        
+
         $rooms = $query->latest()->paginate(10);
-        
+
         return view('rooms.index', compact('rooms'));
     }
 
@@ -48,11 +48,11 @@ class RoomController extends Controller
             'roomname' => 'required|string|max:255',
             'department_id' => 'required|exists:departments,id',
         ]);
-        
+
         Room::create($validated);
-        
+
         return redirect()->route('rooms.index')
-                         ->with('success', 'Room created successfully');
+            ->with('success', 'Room created successfully');
     }
 
     /**
@@ -82,11 +82,11 @@ class RoomController extends Controller
             'roomname' => 'required|string|max:255',
             'department_id' => 'required|exists:departments,id',
         ]);
-        
+
         $room->update($validated);
-        
+
         return redirect()->route('rooms.index')
-                         ->with('success', 'Room updated successfully');
+            ->with('success', 'Room updated successfully');
     }
 
     /**
@@ -95,11 +95,11 @@ class RoomController extends Controller
     public function destroy(Room $room)
     {
         $room->delete();
-        
+
         return redirect()->route('rooms.index')
-                         ->with('success', 'Room deleted successfully');
+            ->with('success', 'Room deleted successfully');
     }
-    
+
     /**
      * Export rooms to PDF.
      */
@@ -113,5 +113,20 @@ class RoomController extends Controller
         ]);
 
         return $pdf->download('room_records_' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Export individual room to PDF
+     */
+    public function exportIndividualPdf(Room $room)
+    {
+        $room->load('department');
+
+        $pdf = PDF::loadView('rooms.individual-pdf', [
+            'room' => $room,
+            'title' => 'Room Record'
+        ]);
+
+        return $pdf->download('room_record_' . $room->id . '_' . now()->format('Y-m-d') . '.pdf');
     }
 }

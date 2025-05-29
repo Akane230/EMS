@@ -92,13 +92,13 @@
                     </div>
                 </div>
 
-                <div class="flex justify-between">
-                    <a href="{{ route('schedules.index') }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                        <i class="fas fa-arrow-left mr-2"></i> Back to Schedules
-                    </a>
-                    <button type="submit" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition">
-                        <i class="fas fa-save mr-2"></i> Save Schedule
+                <div class="flex items-center space-x-4">
+                    <button type="submit" class="module-action">
+                        Create Schedule <i class="fas fa-save ml-2"></i>
                     </button>
+                    <a href="{{ route('schedules.index') }}" class="py-2 px-4 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                        Cancel
+                    </a>
                 </div>
             </form>
         </div>

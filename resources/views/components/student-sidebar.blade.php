@@ -1,10 +1,7 @@
 <aside class="sidebar"
     x-data="{}"
     x-init="$nextTick(() => {})"
-    :class="{
-          'sidebar-collapsed': !$store.layout.sidebarOpen, 
-          'sidebar-open': $store.layout.sidebarOpen && window.innerWidth < 992
-      }">
+    :class="{ 'sidebar-hidden': !$store.layout.sidebarOpen }">
 
     <div class="sidebar-header">
         <div class="logo">
@@ -39,6 +36,14 @@
         </div>
 
         <div class="nav-section">
+            <div class="nav-section-title">Student Profile</div>
+            <a href="{{ route('studentSide.profile.show') }}" class="nav-link @active(request()->routeIs('studentSide.profile.show*'))">
+                <span class="nav-icon"><i class="fa-solid fa-circle-user"></i></span>
+                My Profile
+            </a>
+        </div>
+
+        <div class="nav-section">
             <div class="nav-section-title">Account</div>
             <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
@@ -60,7 +65,7 @@
                 @endif
             </div>
             <div>
-                <div class="user-name">{{ auth()->user()->name }}</div>
+                <div class="user-name">{{ auth()->user()->student->first_name }}</div>
                 <div class="user-role">{{ auth()->user()->student->student_id ?? 'Student' }}</div>
             </div>
         </div>

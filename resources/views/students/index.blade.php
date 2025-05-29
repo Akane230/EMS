@@ -19,8 +19,9 @@
             Add Student <i class="fas fa-plus ml-2"></i>
         </a>
         <a href="{{ route('students.export.pdf') }}" class="px-4 py-2 bg-green-600 text-black rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition">
-            <i class="fas fa-file-pdf mr-2"></i> Export PDF
+            <i class="fas fa-file-pdf mr-2"></i> All Students PDF
         </a>
+
     </div>
     <div class="max-w-7xl mx-auto">
         <div class="module-card">
@@ -85,6 +86,9 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">
+                                    <a href="{{ route('students.export.individual.pdf', $student->id) }}" class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200" title="Export PDF">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
                                     <a href="{{ route('students.show', $student->id) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">
                                         <i class="fas fa-eye"></i>
                                     </a>

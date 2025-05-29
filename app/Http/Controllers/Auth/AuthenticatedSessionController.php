@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
         } elseif ($user->role === 'Student') {
             // If user is a student but doesn't have a student record, redirect to profile
             if (!$user->student) {
-                return redirect()->route('profile.edit')
+                return redirect()->route('studentSide.profile.edit')
                     ->with('error', 'Please complete your student profile before accessing the dashboard.');
             }
             return redirect()->intended(route('studentSide.dashboard'));

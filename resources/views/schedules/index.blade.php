@@ -125,6 +125,9 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">
+                                    <a href="{{ route('schedules.export.individual.pdf', $schedule->id) }}" class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200" title="Export PDF">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
                                     <a href="{{ route('schedules.show', $schedule->id) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">
                                         <i class="fas fa-eye"></i>
                                     </a>

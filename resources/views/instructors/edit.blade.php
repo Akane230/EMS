@@ -99,6 +99,11 @@
                         <label class="block text-sm font-medium mb-1">Zipcode/Postal Code</label>
                         <input type="text" name="zipcode" value="{{ old('zipcode', $instructor->zipcode) }}"
                             class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">User ID (Optional)</label>
+                            <input type="number" name="user_id" value="{{ old('user_id') }}"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                        </div>
                     </div>
                 </div>
 

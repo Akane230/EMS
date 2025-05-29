@@ -229,8 +229,8 @@ class EnrollmentsController extends Controller
                 $query->where('program_id', $programId)
                     ->orWhere('program_id', $genEdProgramId);
             })
-            ->orderBy('course_code')
-            ->get();
+                ->orderBy('course_code')
+                ->get();
         } else {
             // If no general education program exists, just get program-specific courses
             $courses = Course::where('program_id', $programId)
@@ -344,5 +344,19 @@ class EnrollmentsController extends Controller
             DB::rollBack();
             return back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()])->withInput();
         }
+    }
+    /**
+     * Export individual enrollment to PDF
+     */
+    public function exportIndividualPdf(Enrollment $enrollment)
+    {
+        $enrollment->load(['student', 'term', 'course', 'section', 'schedule']);
+
+        $pdf = PDF::loadView('enrollments.individual-pdf', [
+            'enrollment' => $enrollment,
+            'title' => 'Enrollment Record'
+        ]);
+
+        return $pdf->download('enrollment_record_' . $enrollment->id . '_' . now()->format('Y-m-d') . '.pdf');
     }
 }

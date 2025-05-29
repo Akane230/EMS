@@ -58,7 +58,11 @@ body {
     border-color: rgba(255, 255, 255, 0.1);
 }
 
-.sidebar-collapsed {
+.sidebar {
+    transform: translateX(0);
+}
+
+.sidebar.sidebar-hidden {
     transform: translateX(-280px);
 }
 
@@ -1018,6 +1022,7 @@ button{
 
 a{
     outline: none;
+    cursor: pointer;
 }
 
 .input-padding{
@@ -1514,6 +1519,27 @@ a{
     color: black;
 }
 
+.dark .black-text{
+    color: white;
+}
+
+#instructor-quick-actions{
+    margin-top: 30px;
+}
+
+.margin-top{
+    margin-top: 30px;
+}
+
+.add-gap{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.justify-center{
+    justify-content: center;
+}
 /* Ensure dropdown options are visible in both light and dark mode */
 /* .nav-link.logout {
     color: var(--danger);
@@ -1580,7 +1606,7 @@ a{
         transform: translateX(-280px);
     }
     
-    .sidebar-open {
+    .sidebar.sidebar-visible {
         transform: translateX(0);
     }
     

@@ -18,18 +18,18 @@
         <div class="module-card">
             <form action="{{ route('terms.store') }}" method="POST">
                 @csrf
-                
+
                 <div class="mb-6">
                     <label for="schoolyear_semester" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">School Year/Semester <span class="text-red-600">*</span></label>
-                    <input type="text" name="schoolyear_semester" id="schoolyear_semester" value="{{ old('schoolyear_semester') }}" 
+                    <input type="text" name="schoolyear_semester" id="schoolyear_semester" value="{{ old('schoolyear_semester') }}"
                         class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding"
                         placeholder="e.g. 2025-2026 First Semester" required>
                     @error('schoolyear_semester')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="mb-6">  
+                <div class="mb-6">
                     <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status <span class="text-red-600">*</span></label>
                     <select name="status" id="status" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding" required>
                         <option value="active">Active</option>
@@ -37,34 +37,37 @@
                         <option value="completed">Completed</option>
                     </select>
                     @error('status')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-                
+
                 <div class="mb-6">
                     <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date <span class="text-red-600">*</span></label>
-                    <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}" 
+                    <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}"
                         class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding"
                         required>
                     @error('start_date')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-                
+
                 <div class="mb-6">
                     <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End Date <span class="text-red-600">*</span></label>
-                    <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}" 
+                    <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}"
                         class="w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 input-padding"
                         required>
                     @error('end_date')
-                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-                
-                <div class="flex justify-end">
-                    <button type="submit" class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition">
+
+                <div class="flex items-center space-x-4">
+                    <button type="submit" class="module-action">
                         Create Term <i class="fas fa-save ml-2"></i>
                     </button>
+                    <a href="{{ route('terms.index') }}" class="py-2 px-4 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                        Cancel
+                    </a>
                 </div>
             </form>
         </div>

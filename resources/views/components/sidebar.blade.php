@@ -1,10 +1,7 @@
 <aside class="sidebar"
     x-data="{}"
     x-init="$nextTick(() => {})"
-    :class="{
-          'sidebar-collapsed': !$store.layout.sidebarOpen, 
-          'sidebar-open': $store.layout.sidebarOpen && window.innerWidth < 992
-      }">
+    :class="{ 'sidebar-hidden': !$store.layout.sidebarOpen }">
 
     <div class="sidebar-header">
         <div class="logo">
@@ -19,14 +16,6 @@
             <a href="{{ route('dashboard') }}" class="nav-link @active(request()->is('dashboard'))">
                 <span class="nav-icon"><i class="fas fa-th-large"></i></span>
                 Dashboard
-            </a>
-            <a href="#" class="nav-link @active(request()->is('calendar'))">
-                <span class="nav-icon"><i class="fas fa-calendar-alt"></i></span>
-                Calendar
-            </a>
-            <a href="#" class="nav-link @active(request()->is('analytics'))">
-                <span class="nav-icon"><i class="fas fa-chart-bar"></i></span>
-                Analytics
             </a>
         </div>
 
@@ -68,7 +57,7 @@
                 <span class="nav-icon"> <img class="nav-img" src="{{ asset('images/position.png') }}" alt=""></span>
                 Positions
             </a>
-            
+
         </div>
 
         <div class="nav-section">
@@ -89,17 +78,9 @@
 
         <div class="nav-section">
             <div class="nav-section-title">Settings</div>
-            <a href="#" class="nav-link @active(request()->is('settings/system'))">
-                <span class="nav-icon"><i class="fas fa-cog"></i></span>
-                System Settings
-            </a>
             <a href="{{ route('users.index') }}" class="nav-link @active(request()->is('users.*'))">
                 <span class="nav-icon"><i class="fas fa-users-cog"></i></span>
                 User Management
-            </a>
-            <a href="#" class="nav-link @active(request()->is('settings/permissions'))">
-                <span class="nav-icon"><i class="fas fa-shield-alt"></i></span>
-                Permissions
             </a>
             <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
@@ -114,7 +95,7 @@
     <div class="sidebar-footer">
         <div class="user-info">
             <div class="avatar">
-            @if(auth()->user()->avatar)
+                @if(auth()->user()->avatar)
                 <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="Profile" class="avatar-image">
                 @else
                 <i class="fas fa-user"></i>

@@ -33,36 +33,36 @@
                                 placeholder="Search by student name or course...">
                             <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                         </div>
-                        
+
                         <div class="min-w-[150px]">
                             <select name="term_id" class="w-full py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
                                 <option value="">All Terms</option>
                                 @foreach($terms as $term)
-                                    <option value="{{ $term->id }}" {{ request('term_id') == $term->id ? 'selected' : '' }}>
-                                        {{ $term->schoolyear_semester }} 
-                                        <span class="text-sm text-gray-500">
-                                            ({{ ucfirst($term->status) }})
-                                        </span>
-                                    </option>
+                                <option value="{{ $term->id }}" {{ request('term_id') == $term->id ? 'selected' : '' }}>
+                                    {{ $term->schoolyear_semester }}
+                                    <span class="text-sm text-gray-500">
+                                        ({{ ucfirst($term->status) }})
+                                    </span>
+                                </option>
                                 @endforeach
                             </select>
                         </div>
-                        
+
                         <div class="min-w-[150px]">
                             <select name="year_level" class="w-full py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
                                 <option value="">All Year Levels</option>
                                 @for ($i = 1; $i <= 5; $i++)
                                     <option value="{{ $i }}" {{ request('year_level') == $i ? 'selected' : '' }}>
-                                        Year {{ $i }}
+                                    Year {{ $i }}
                                     </option>
-                                @endfor
+                                    @endfor
                             </select>
                         </div>
-                        
+
                         <button type="submit" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition">
                             Filter
                         </button>
-                        
+
                         <a href="{{ route('enrollments.index') }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
                             Clear
                         </a>
@@ -106,12 +106,12 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($enrollment->schedule)
-                                    {{ $enrollment->schedule->day ?? 'N/A' }}, 
-                                    {{ $enrollment->schedule->instructor->first_name ?? 'N/A' }} {{ $enrollment->schedule->instructor->last_name ?? 'N/A' }}, 
-                                    {{ \Carbon\Carbon::parse($enrollment->schedule->starting_time ?? '')->format('h:i A') }} - 
-                                    {{ \Carbon\Carbon::parse($enrollment->schedule->ending_time ?? '')->format('h:i A') }}
+                                {{ $enrollment->schedule->day ?? 'N/A' }},
+                                {{ $enrollment->schedule->instructor->first_name ?? 'N/A' }} {{ $enrollment->schedule->instructor->last_name ?? 'N/A' }},
+                                {{ \Carbon\Carbon::parse($enrollment->schedule->starting_time ?? '')->format('h:i A') }} -
+                                {{ \Carbon\Carbon::parse($enrollment->schedule->ending_time ?? '')->format('h:i A') }}
                                 @else
-                                    N/A
+                                N/A
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -121,6 +121,9 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex space-x-2">
+                                    <a href="{{ route('enrollments.export.individual.pdf', $enrollment->id) }}" class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200" title="Export PDF">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
                                     <a href="{{ route('enrollments.show', $enrollment->id) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200">
                                         <i class="fas fa-eye"></i>
                                     </a>

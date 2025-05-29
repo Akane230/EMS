@@ -126,4 +126,19 @@ class ProgramController extends Controller
 
         return $pdf->download('program_records_' . now()->format('Y-m-d') . '.pdf');
     }
+
+    /**
+     * Export individual program to PDF
+     */
+    public function exportIndividualPdf(Program $program)
+    {
+        $program->load('department');
+
+        $pdf = PDF::loadView('programs.individual-pdf', [
+            'program' => $program,
+            'title' => 'Program Record'
+        ]);
+
+        return $pdf->download('program_record_' . $program->id . '_' . now()->format('Y-m-d') . '.pdf');
+    }
 }

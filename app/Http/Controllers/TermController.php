@@ -110,4 +110,17 @@ class TermController extends Controller
 
         return $pdf->download('term_records_' . now()->format('Y-m-d') . '.pdf');
     }
+
+    /**
+     * Export individual term to PDF
+     */
+    public function exportIndividualPdf(Term $term)
+    {
+        $pdf = PDF::loadView('terms.individual-pdf', [
+            'term' => $term,
+            'title' => 'Term Record'
+        ]);
+
+        return $pdf->download('term_record_' . $term->id . '_' . now()->format('Y-m-d') . '.pdf');
+    }
 }

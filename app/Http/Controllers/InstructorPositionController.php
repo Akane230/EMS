@@ -16,19 +16,19 @@ class InstructorPositionController extends Controller
     public function index(Request $request)
     {
         $query = InstructorPosition::with(['instructor', 'position']);
-        
+
         // Search functionality
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
-            $query->whereHas('instructor', function($q) use ($search) {
+            $query->whereHas('instructor', function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%");
-            })->orWhereHas('position', function($q) use ($search) {
+            })->orWhereHas('position', function ($q) use ($search) {
                 $q->where('position_name', 'like', "%{$search}%");
             });
         }
-        
+
         $instructorPositions = $query->latest()->paginate(10);
-        
+
         return view('instructor-positions.index', compact('instructorPositions'));
     }
 
@@ -39,7 +39,7 @@ class InstructorPositionController extends Controller
     {
         $instructors = Instructor::all();
         $positions = Position::all();
-        
+
         return view('instructor-positions.create', compact('instructors', 'positions'));
     }
 
@@ -52,9 +52,9 @@ class InstructorPositionController extends Controller
             'instructor_id' => 'required|exists:instructors,id',
             'position_id' => 'required|exists:positions,id',
         ]);
-        
+
         InstructorPosition::create($request->all());
-        
+
         return redirect()->route('instructor-positions.index')
             ->with('success', 'Instructor position assigned successfully');
     }
@@ -65,7 +65,7 @@ class InstructorPositionController extends Controller
     public function show(InstructorPosition $instructorPosition)
     {
         $instructorPosition->load(['instructor', 'position']);
-        
+
         return view('instructor-positions.show', compact('instructorPosition'));
     }
 
@@ -76,7 +76,7 @@ class InstructorPositionController extends Controller
     {
         $instructors = Instructor::all();
         $positions = Position::all();
-        
+
         return view('instructor-positions.edit', compact('instructorPosition', 'instructors', 'positions'));
     }
 
@@ -89,9 +89,9 @@ class InstructorPositionController extends Controller
             'instructor_id' => 'required|exists:instructors,id',
             'position_id' => 'required|exists:positions,id',
         ]);
-        
+
         $instructorPosition->update($request->all());
-        
+
         return redirect()->route('instructor-positions.index')
             ->with('success', 'Instructor position updated successfully');
     }
@@ -102,7 +102,7 @@ class InstructorPositionController extends Controller
     public function destroy(InstructorPosition $instructorPosition)
     {
         $instructorPosition->delete();
-        
+
         return redirect()->route('instructor-positions.index')
             ->with('success', 'Instructor position removed successfully');
     }
@@ -120,5 +120,20 @@ class InstructorPositionController extends Controller
         ]);
 
         return $pdf->download('instructor_positions_' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Export individual instructor position to PDF
+     */
+    public function exportIndividualPdf(InstructorPosition $instructorPosition)
+    {
+        $instructorPosition->load(['instructor', 'position']);
+
+        $pdf = PDF::loadView('instructor-positions.individual-pdf', [
+            'instructorPosition' => $instructorPosition,
+            'title' => 'Instructor Position Record'
+        ]);
+
+        return $pdf->download('instructor_position_record_' . $instructorPosition->id . '_' . now()->format('Y-m-d') . '.pdf');
     }
 }

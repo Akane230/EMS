@@ -115,4 +115,17 @@ class DepartmentController extends Controller
 
         return $pdf->download('department_records_' . now()->format('Y-m-d') . '.pdf');
     }
+
+    /**
+     * Export individual department to PDF
+     */
+    public function exportIndividualPdf(Department $department)
+    {
+        $pdf = PDF::loadView('departments.individual-pdf', [
+            'department' => $department,
+            'title' => 'Department Record'
+        ]);
+
+        return $pdf->download('department_record_' . $department->id . '_' . now()->format('Y-m-d') . '.pdf');
+    }
 }

@@ -45,6 +45,10 @@ class CheckRole
             return redirect()->route('admin.dashboard');
         }
 
+        if ($request->user()->role === 'Instructor') {
+            return redirect()->route('instructor.dashboard');
+        }
+
         // If we get here, the user has a role that doesn't match any known role
         abort(403, 'Unauthorized access');
     }

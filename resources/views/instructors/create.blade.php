@@ -97,13 +97,21 @@
                         <label class="block text-sm font-medium mb-1">Zipcode/Postal Code</label>
                         <input type="text" name="zipcode" value="{{ old('zipcode') }}"
                             class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">User ID (Optional)</label>
+                            <input type="number" name="user_id" value="{{ old('user_id') }}"
+                                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex justify-end space-x-4 mt-8">
-                    <button type="submit" class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition">
-                        Create Instructor
+                <div class="flex items-center space-x-4">
+                    <button type="submit" class="module-action">
+                        Create Instructor <i class="fas fa-save ml-2"></i>
                     </button>
+                    <a href="{{ route('instructors.index') }}" class="py-2 px-4 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                        Cancel
+                    </a>
                 </div>
             </form>
         </div>

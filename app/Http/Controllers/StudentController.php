@@ -114,6 +114,9 @@ class StudentController extends Controller
             ->with('success', 'Student deleted successfully');
     }
 
+    /**
+     * Export all students as PDF
+     */
     public function exportPdf()
     {
         $students = Student::all();
@@ -124,5 +127,20 @@ class StudentController extends Controller
         ]);
 
         return $pdf->download('student_records_' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Export individual student record as PDF
+     */
+    public function exportIndividualPdf(Student $student)
+    {
+        $pdf = PDF::loadView('students.individual-pdf', [
+            'student' => $student,
+            'title' => 'Student Record - ' . $student->first_name . ' ' . $student->last_name
+        ]);
+
+        $filename = 'student_' . $student->id . '_' . strtolower(str_replace(' ', '_', $student->first_name . '_' . $student->last_name)) . '_' . now()->format('Y-m-d') . '.pdf';
+
+        return $pdf->download($filename);
     }
 }
